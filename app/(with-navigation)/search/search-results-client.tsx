@@ -1,10 +1,8 @@
 "use client";
 
-import { useCallback, useEffect, useRef } from "react";
+import { useCallback } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useAppSelector, useAppDispatch } from "@/lib/store/store-hooks";
-import { setQuery, clearQuery } from "@/lib/store/slices/searchSlice";
-import { searchRecipes } from "@/lib/store/slices/searchThunks";
+import { useSearchRecipes } from "@/hooks/use-recipes-query";
 import { SearchControls } from "@/components/features/search/search-controls/search-controls";
 import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
 import { RecipeCard } from "@/components/features/recipe/recipe-card/recipe-card";
@@ -15,42 +13,17 @@ import styles from "./search-results.module.css";
 export function SearchResultsClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const dispatch = useAppDispatch();
-  const hasInitialized = useRef(false);
+  const rawQuery = searchParams.get("q") || "";
+  const query =
+    rawQuery.length > 0
+      ? rawQuery.charAt(0).toUpperCase() + rawQuery.slice(1)
+      : "";
 
-  // Get search state from Redux
   const {
-    query,
-    results: recipes,
+    data: recipes = [],
     isLoading,
     error,
-  } = useAppSelector((state) => state.search);
-
-  // Initialize search from URL params only once
-  useEffect(() => {
-    if (!hasInitialized.current) {
-      const rawQuery = searchParams.get("q") || "";
-      const formattedQuery =
-        rawQuery.charAt(0).toUpperCase() + rawQuery.slice(1);
-
-      if (formattedQuery) {
-        dispatch(setQuery(formattedQuery));
-        dispatch(searchRecipes(formattedQuery));
-      }
-      hasInitialized.current = true;
-    }
-  }, [searchParams, dispatch]);
-
-  // Clear search when navigating away from search page
-  useEffect(() => {
-    return () => {
-      // Only clear if we're not on a search page anymore
-      const currentPath = window.location.pathname;
-      if (!currentPath.includes("/search")) {
-        dispatch(clearQuery());
-      }
-    };
-  }, [dispatch]);
+  } = useSearchRecipes(query);
 
   const handleRecipeClick = useCallback(
     (recipe: Recipe) => {
@@ -87,7 +60,6 @@ export function SearchResultsClient() {
   };
 
   const renderResults = () => {
-    // Show loading state
     if (isLoading) {
       return (
         <div
@@ -103,17 +75,15 @@ export function SearchResultsClient() {
       );
     }
 
-    // Show error state
     if (error) {
       return (
         <div className={styles.noResults}>
           <h2>Search Error</h2>
-          <p>{error || "Something went wrong with your search"}</p>
+          <p>{error.message || "Something went wrong with your search"}</p>
         </div>
       );
     }
 
-    // Show content
     return renderContent();
   };
 
@@ -125,7 +95,7 @@ export function SearchResultsClient() {
             <h1 className="section-header">Search Results for {query}</h1>
           </div>
 
-          <SearchControls />
+          <SearchControls initialQuery={query} />
 
           {renderResults()}
         </div>

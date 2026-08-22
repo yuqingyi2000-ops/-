@@ -2,37 +2,30 @@
 
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useAppSelector, useAppDispatch } from "@/lib/store/store-hooks";
-import { setQuery } from "@/lib/store/slices/searchSlice";
-import { searchRecipes } from "@/lib/store/slices/searchThunks";
 import styles from "./search-controls.module.css";
-import { useCallback } from "react";
+import { useCallback, useEffect, useState } from "react";
 
-export function SearchControls() {
+interface SearchControlsProps {
+  initialQuery?: string;
+}
+
+export function SearchControls({ initialQuery = "" }: SearchControlsProps) {
   const router = useRouter();
-  const dispatch = useAppDispatch();
-  const searchTerm = useAppSelector((state) => state.search.query);
+  const [searchTerm, setSearchTerm] = useState(initialQuery);
 
-  const handleSearchChange = useCallback(
-    (value: string) => {
-      dispatch(setQuery(value));
-    },
-    [dispatch]
-  );
+  useEffect(() => {
+    setSearchTerm(initialQuery);
+  }, [initialQuery]);
 
   const handleSearchSubmit = useCallback(
-    async (e: React.FormEvent) => {
+    (e: React.FormEvent) => {
       e.preventDefault();
       const trimmedSearch = searchTerm.trim();
       if (trimmedSearch) {
-        // Update URL for bookmarking/sharing
         router.push(`/search?q=${encodeURIComponent(trimmedSearch)}`);
-
-        // Perform search via Redux
-        await dispatch(searchRecipes(trimmedSearch));
       }
     },
-    [router, searchTerm, dispatch]
+    [router, searchTerm]
   );
 
   return (
@@ -42,7 +35,7 @@ export function SearchControls() {
           <input
             placeholder="Search recipes, ingredients, categories"
             value={searchTerm}
-            onChange={(e) => handleSearchChange(e.target.value)}
+            onChange={(e) => setSearchTerm(e.target.value)}
             className={styles.searchInput}
             type="search"
             aria-label="Search recipes"

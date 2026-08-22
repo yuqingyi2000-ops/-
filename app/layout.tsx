@@ -6,7 +6,6 @@ import { ExposeSupabase } from "@/components/dev/ExposeSupabase";
 import { LottiePreloader } from "@/components/ui/lottie-preloader/lottie-preloader";
 import { AIChefWidget } from "@/components/features/ai-chef/ai-chef-widget";
 import { ReactQueryProvider } from "@/components/providers/ReactQueryProvider";
-import { ReduxProvider } from "@/components/providers/ReduxProvider";
 import { PageTransition } from "@/components/ui/page-transition/page-transition";
 import { ServiceWorkerUpdateHandler } from "@/components/ui/service-worker-update-handler/service-worker-update-handler";
 
@@ -32,20 +31,18 @@ export default function RootLayout({
         <title>The Recipe Room</title>
       </head>
       <body suppressHydrationWarning={true}>
-        <ReduxProvider>
-          <ReactQueryProvider>
-            <AuthProvider>
-              {/* Only expose Supabase in development */}
-              {process.env.NODE_ENV === "development" && <ExposeSupabase />}
-              <LottiePreloader />
-              <PageTransition>
-                <main>{children}</main>
-              </PageTransition>
-              <AIChefWidget />
-              <ServiceWorkerUpdateHandler />
-            </AuthProvider>
-          </ReactQueryProvider>
-        </ReduxProvider>
+        <ReactQueryProvider>
+          <AuthProvider>
+            {/* Only expose Supabase in development */}
+            {process.env.NODE_ENV === "development" && <ExposeSupabase />}
+            <LottiePreloader />
+            <PageTransition>
+              <main>{children}</main>
+            </PageTransition>
+            <AIChefWidget />
+            <ServiceWorkerUpdateHandler />
+          </AuthProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );

@@ -1,27 +1,20 @@
 "use client";
 
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useState } from "react";
 import { AIChefButton } from "./ai-chef-button/ai-chef-button";
 import { AIChefChatWindow } from "./ai-chef-chat-window/ai-chef-chat-window";
-import { useAppSelector, useAppDispatch } from "@/lib/store/store-hooks";
-import { openAIChefChat, closeAIChefChat } from "@/lib/store/slices/uiSlice";
 
 export function AIChefWidget() {
-  const isChatOpen = useAppSelector((state) => state.ui.isAIChefChatOpen);
-  const dispatch = useAppDispatch();
+  const [isChatOpen, setIsChatOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
 
   const handleAIChefClick = useCallback(() => {
-    if (isChatOpen) {
-      dispatch(closeAIChefChat());
-    } else {
-      dispatch(openAIChefChat());
-    }
-  }, [isChatOpen, dispatch]);
+    setIsChatOpen((open) => !open);
+  }, []);
 
   const handleCloseChat = useCallback(() => {
-    dispatch(closeAIChefChat());
-  }, [dispatch]);
+    setIsChatOpen(false);
+  }, []);
 
   return (
     <>
