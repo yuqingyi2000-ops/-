@@ -63,7 +63,7 @@ export function CategoriesSection({
           const { supabase } = await import("@/lib/supabase");
           return database.getRecipesByCategory(supabase, category);
         },
-        staleTime: 0, // Allow immediate refetches for real-time updates
+        staleTime: 5 * 60 * 1000,
         gcTime: 10 * 60 * 1000,
       });
     },

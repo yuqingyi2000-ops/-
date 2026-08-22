@@ -1,7 +1,3 @@
-@import url("https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700;800;900&family=Crimson+Text:wght@400;600;700&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;600;700;800&display=swap");
-@import url("https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600;700&display=swap");
-
 :root {
   /*Colors*/
   --primary-color: #7c021d;
@@ -43,11 +39,11 @@
     transparent
   );
 
-  /* Font Families */
-  --font-family-header: "Playfair Display", serif;
-  --font-family-crimson: "Crimson Text", serif;
-  --font-family-cormorant: "Cormorant Garamond", serif;
-  --font-family-eb-garamond: "EB Garamond", serif;
+  /* Font Families — next/font CSS variables on <html> */
+  --font-family-header: var(--font-playfair), "Playfair Display", serif;
+  --font-family-crimson: var(--font-crimson), "Crimson Text", serif;
+  --font-family-cormorant: var(--font-cormorant), "Cormorant Garamond", serif;
+  --font-family-eb-garamond: var(--font-eb-garamond), "EB Garamond", serif;
   --font-family-body: var(--font-family-crimson);
 
   /* Font Sizes */

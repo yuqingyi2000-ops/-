@@ -26,7 +26,7 @@ export function Navigation() {
       <div className={styles.container}>
         <Link href="/" className={styles.logoContainer}>
           <Image
-            src="/logo-trr.png"
+            src="/logo-trr.webp"
             alt="Recipe Room Logo"
             width={40}
             height={40}

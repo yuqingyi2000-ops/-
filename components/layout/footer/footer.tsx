@@ -1,5 +1,3 @@
-"use client";
-
 import { DEFAULT_FOOTER_QUOTE } from "@/lib/constants";
 import styles from "./footer.module.css";
 

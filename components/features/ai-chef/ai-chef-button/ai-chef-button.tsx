@@ -35,7 +35,6 @@ export const AIChefButton = forwardRef<HTMLButtonElement, Props>(
             alt="AI Chef"
             width={28}
             height={28}
-            priority
             sizes="28px"
             quality={85}
           />

@@ -144,11 +144,3 @@ class LottieCache {
 
 // Global instance for use throughout the application
 export const lottieCache = new LottieCache();
-
-// Preload default animation on module load (only on client side)
-// This ensures the main loading animation is ready immediately
-if (typeof window !== "undefined") {
-  const DEFAULT_ANIMATION_PATH =
-    "/assets/lottie/Animation - 1751255045745.json";
-  lottieCache.preloadAnimation(DEFAULT_ANIMATION_PATH).catch(console.error);
-}

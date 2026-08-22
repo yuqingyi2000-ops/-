@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabase";
 import { useQueryClient } from "@tanstack/react-query";
-import { recipeKeys } from "@/hooks/use-recipes-query";
+import { recipeKeys } from "@/lib/recipe-keys";
 
 export function ReactQueryProvider({
   children,
@@ -18,9 +18,9 @@ export function ReactQueryProvider({
           staleTime: 5 * 60 * 1000, // 5 minutes
           gcTime: 10 * 60 * 1000, // 10 minutes
           retry: 3,
-          refetchOnWindowFocus: false, // Disable refetch on window focus to prevent unnecessary requests
+          refetchOnWindowFocus: false,
           refetchOnReconnect: true,
-          refetchOnMount: false, // Don't refetch when component mounts if data exists
+          refetchOnMount: false,
         },
       },
     });
@@ -28,22 +28,10 @@ export function ReactQueryProvider({
     return client;
   });
 
-  // Handle hydration mismatch
-  const [isClient, setIsClient] = useState(false);
-
-  useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  if (!isClient) {
-    return null; // or a loading spinner
-  }
-
   return (
     <QueryClientProvider client={queryClient}>
       <ReactQueryAuthSync />
       {children}
-      {/* {process.env.NODE_ENV === "development" && <ReactQueryDevtools initialIsOpen={false} />} */}
     </QueryClientProvider>
   );
 }

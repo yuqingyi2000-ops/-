@@ -10,11 +10,13 @@ import Image from "next/image";
 interface RecipeCardProps {
   recipe: Recipe;
   onClick: () => void;
+  priority?: boolean;
 }
 
 export const RecipeCard = React.memo(function RecipeCard({
   recipe,
   onClick,
+  priority = false,
 }: RecipeCardProps) {
   const { user } = useAuth();
   const isMyRecipe = user && recipe.userId === user.id;
@@ -46,6 +48,7 @@ export const RecipeCard = React.memo(function RecipeCard({
             className={styles.recipeImage}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
             style={{ width: "100%", height: "auto" }}
+            priority={priority}
           />
         ) : (
           <div className={styles.placeholderImage}>

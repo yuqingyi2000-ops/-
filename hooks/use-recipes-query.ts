@@ -5,20 +5,9 @@ import { database } from "@/lib/database";
 import { supabase } from "@/lib/supabase";
 import { ERROR_MESSAGES } from "@/lib/constants";
 import type { Recipe } from "@/types/recipe";
-import { useEffect, useState } from "react";
+import { recipeKeys } from "@/lib/recipe-keys";
 
-// Query keys for React Query
-export const recipeKeys = {
-  all: ["recipes"] as const,
-  lists: () => [...recipeKeys.all, "list"] as const,
-  list: (filters: string) => [...recipeKeys.lists(), { filters }] as const,
-  details: () => [...recipeKeys.all, "detail"] as const,
-  detail: (id: string) => [...recipeKeys.details(), id] as const,
-  featured: () => [...recipeKeys.all, "featured"] as const,
-  search: (query: string) => [...recipeKeys.all, "search", query] as const,
-  category: (category: string) =>
-    [...recipeKeys.all, "category", category] as const,
-};
+export { recipeKeys };
 
 // Hook to get all recipes
 export function useRecipes() {
@@ -26,11 +15,10 @@ export function useRecipes() {
     queryKey: recipeKeys.lists(),
     queryFn: async () => {
       const data = await database.getRecipes(supabase);
-      console.log("All recipes fetched:", data);
       return data;
     },
-    staleTime: 0, // Allow immediate refetches for real-time updates
-    gcTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
   });
 }
 
@@ -40,13 +28,12 @@ export function useFeaturedRecipes() {
     queryKey: recipeKeys.featured(),
     queryFn: async () => {
       const data = await database.getFeaturedRecipes(supabase);
-      console.log("Featured recipes fetched:", data);
       return data;
     },
-    staleTime: 0, // Allow immediate refetches for real-time updates
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    refetchOnWindowFocus: false, // Don't refetch when window gains focus
-    refetchOnMount: true, // Force refetch when component mounts
+    staleTime: 5 * 60 * 1000,
+    gcTime: 10 * 60 * 1000,
+    refetchOnWindowFocus: false,
+    refetchOnMount: false,
   });
 }
 
@@ -55,10 +42,10 @@ export function useRecipe(id: string) {
   return useQuery({
     queryKey: recipeKeys.detail(id),
     queryFn: () => database.getRecipe(supabase, id),
-    enabled: !!id, // Only run if id exists
-    staleTime: 0, // Allow immediate refetches for real-time updates
+    enabled: !!id,
+    staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
-    refetchOnMount: true, // Always refetch when component mounts
+    refetchOnMount: false,
   });
 }
 
@@ -67,10 +54,10 @@ export function useRecipeBySlug(slug: string) {
   return useQuery({
     queryKey: recipeKeys.detail(slug),
     queryFn: () => database.getRecipeBySlug(supabase, slug),
-    enabled: !!slug, // Only run if slug exists
-    staleTime: 0, // Allow immediate refetches for real-time updates
+    enabled: !!slug,
+    staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
-    refetchOnMount: true, // Always refetch when component mounts
+    refetchOnMount: false,
   });
 }
 
@@ -222,18 +209,18 @@ export function useCategoryCounts() {
     queryKey: ["category-counts"],
     queryFn: async () => {
       const response = await fetch("/api/category-recipe-counts", {
-        credentials: "include", // Ensures cookies/session are sent!
+        credentials: "include",
       });
       if (!response.ok) {
         throw new Error("Failed to fetch category counts");
       }
       return response.json() as Promise<Record<string, number>>;
     },
-    staleTime: 0, // Allow immediate refetches for real-time updates
+    staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
-    refetchOnMount: true, // Always refetch when component mounts
-    refetchOnWindowFocus: true, // Refetch when window gains focus
-    refetchOnReconnect: true, // Refetch when reconnecting
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: true,
   });
 }
 
@@ -242,7 +229,7 @@ export function useRecipesWithUser() {
   return useQuery({
     queryKey: recipeKeys.all,
     queryFn: () => database.getRecipes(supabase),
-    staleTime: 0, // Allow immediate refetches for real-time updates
+    staleTime: 5 * 60 * 1000,
     gcTime: 10 * 60 * 1000,
   });
 }

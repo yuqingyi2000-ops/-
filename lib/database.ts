@@ -96,6 +96,7 @@ export const database = {
   },
 
   // Get featured recipes (visible to all users)
+  // Card list payload only — skip N+1 ingredient/instruction group fetches
   async getFeaturedRecipes(supabase: SupabaseClient): Promise<Recipe[]> {
     const { data, error } = await supabase
       .from("recipes")
@@ -105,22 +106,15 @@ export const database = {
       .order("created_at", { ascending: false });
     if (error) throw new Error("Failed to fetch featured recipes");
 
-    // Fetch ingredient groups and instruction groups for each recipe
-    const recipesWithGroups = await Promise.all(
-      data.map(async (recipe) => {
-        const ingredientGroups = await this.getIngredientGroups(
-          supabase,
-          recipe.id
-        );
-        const instructionGroups = await this.getInstructionGroups(
-          supabase,
-          recipe.id
-        );
-        return { ...recipe, ingredientGroups, instructionGroups };
+    return (data ?? []).map((recipe) =>
+      normalizeRecipe({
+        ...recipe,
+        ingredients: recipe.ingredients ?? [],
+        instructions: recipe.instructions ?? [],
+        ingredientGroups: [],
+        instructionGroups: [],
       })
     );
-
-    return recipesWithGroups.map(normalizeRecipe);
   },
 
   // Get a single recipe by ID

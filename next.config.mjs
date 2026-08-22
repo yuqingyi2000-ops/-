@@ -37,15 +37,47 @@ const pwaConfig = withPWA({
   dest: "public",
   register: true,
   skipWaiting: false,
-  disable: process.env.NODE_ENV === "development", // Standard: disable in dev, enable in production
-  sw: "/sw-custom.js",
+  disable: process.env.NODE_ENV === "development",
+  // Single custom SW — do not also ship a conflicting public/sw.js
+  sw: "sw-custom.js",
   runtimeCaching: [
-    // Exclude API routes from caching - they should always be fresh
     {
       urlPattern: /\/api\/.*/,
       handler: "NetworkOnly",
     },
-    // Cache everything else with NetworkFirst strategy
+    {
+      urlPattern: /\/_next\/static\/.*/,
+      handler: "CacheFirst",
+      options: {
+        cacheName: "next-static",
+        expiration: {
+          maxEntries: 100,
+          maxAgeSeconds: 60 * 60 * 24 * 30,
+        },
+      },
+    },
+    {
+      urlPattern: /\/_next\/image\?.*/,
+      handler: "StaleWhileRevalidate",
+      options: {
+        cacheName: "next-image",
+        expiration: {
+          maxEntries: 100,
+          maxAgeSeconds: 60 * 60 * 24 * 30,
+        },
+      },
+    },
+    {
+      urlPattern: /\.(?:png|jpg|jpeg|webp|avif|svg|gif|ico)$/i,
+      handler: "CacheFirst",
+      options: {
+        cacheName: "static-images",
+        expiration: {
+          maxEntries: 100,
+          maxAgeSeconds: 60 * 60 * 24 * 30,
+        },
+      },
+    },
     {
       urlPattern: /^https?.*/,
       handler: "NetworkFirst",
@@ -54,6 +86,7 @@ const pwaConfig = withPWA({
         expiration: {
           maxEntries: 200,
         },
+        networkTimeoutSeconds: 10,
       },
     },
   ],

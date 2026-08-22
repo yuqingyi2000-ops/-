@@ -1,12 +1,18 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useAuth } from "../../../lib/auth-context";
-import { Modal } from "../modal/modal";
-import { About } from "../about/about";
 import styles from "./avatar-dropdown.module.css";
+
+const Modal = dynamic(() =>
+  import("../modal/modal").then((mod) => mod.Modal)
+);
+const About = dynamic(() =>
+  import("../about/about").then((mod) => mod.About)
+);
 
 export function AvatarDropdown() {
   const { user, signOut } = useAuth();
@@ -179,13 +185,15 @@ export function AvatarDropdown() {
         </div>
       )}
 
-      <Modal
-        isOpen={isAboutModalOpen}
-        onClose={() => setIsAboutModalOpen(false)}
-        title="About The Recipe Room"
-      >
-        <About />
-      </Modal>
+      {isAboutModalOpen && (
+        <Modal
+          isOpen={isAboutModalOpen}
+          onClose={() => setIsAboutModalOpen(false)}
+          title="About The Recipe Room"
+        >
+          <About />
+        </Modal>
+      )}
     </div>
   );
 }

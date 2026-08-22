@@ -1,5 +1,3 @@
-"use client";
-
 import { DEFAULT_PAGE_TITLE, DEFAULT_PAGE_SUBTITLE } from "@/lib/constants";
 import styles from "./hero.module.css";
 
