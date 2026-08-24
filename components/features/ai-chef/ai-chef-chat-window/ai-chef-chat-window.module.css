@@ -66,6 +66,7 @@
 .messages {
   flex: 1;
   overflow-y: auto;
+  overscroll-behavior: contain;
   padding: 1rem;
   background: #fef7ed;
 }
@@ -78,7 +79,6 @@
 }
 
 .input {
-  padding: 0.75rem;
   border: 2px solid #d2b48c;
   border-radius: var(--radius-large);
   background: var(--white-color);
@@ -86,11 +86,14 @@
   font-family: var(--font-family-body);
   color: var(--color-text-primary);
   transition: border-color 0.2s ease;
-  resize: none;
   min-height: 60px;
   overflow-y: auto;
   line-height: 1.5;
   box-sizing: border-box;
+}
+
+.input :global(.lumen-textarea) {
+  resize: none;
 }
 
 .input:focus {
@@ -187,7 +190,6 @@
   }
 
   .input {
-    padding: 0.5rem;
     min-height: 50px;
   }
 }

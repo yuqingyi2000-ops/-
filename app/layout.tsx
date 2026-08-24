@@ -10,9 +10,11 @@ import "./globals.css";
 import { AuthProvider } from "../lib/auth-context";
 import { ExposeSupabase } from "@/components/dev/ExposeSupabase";
 import { ReactQueryProvider } from "@/components/providers/ReactQueryProvider";
+import { LumenProvider } from "@/components/providers/LumenProvider";
 import { PageTransition } from "@/components/ui/page-transition/page-transition";
 import { ServiceWorkerUpdateHandler } from "@/components/ui/service-worker-update-handler/service-worker-update-handler";
 import { LazyAIChefWidget } from "@/components/features/ai-chef/lazy-ai-chef-widget";
+import { OverlayScrollLock } from "@/components/providers/overlay-scroll-lock";
 
 const playfair = Playfair_Display({
   subsets: ["latin"],
@@ -68,14 +70,17 @@ export default function RootLayout({
       </head>
       <body suppressHydrationWarning={true}>
         <ReactQueryProvider>
-          <AuthProvider>
-            {process.env.NODE_ENV === "development" && <ExposeSupabase />}
-            <PageTransition>
-              <main>{children}</main>
-            </PageTransition>
-            <LazyAIChefWidget />
-            <ServiceWorkerUpdateHandler />
-          </AuthProvider>
+          <LumenProvider>
+            <AuthProvider>
+              {process.env.NODE_ENV === "development" && <ExposeSupabase />}
+              <PageTransition>
+                <main>{children}</main>
+              </PageTransition>
+              <OverlayScrollLock />
+              <LazyAIChefWidget />
+              <ServiceWorkerUpdateHandler />
+            </AuthProvider>
+          </LumenProvider>
         </ReactQueryProvider>
       </body>
     </html>

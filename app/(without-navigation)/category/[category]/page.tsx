@@ -29,7 +29,7 @@ import { RecipeCard } from "@/components/features/recipe/recipe-card/recipe-card
 import { LoadingSkeleton } from "@/components/ui/loading-skeleton/loading-skeleton";
 import { ArrowLeft } from "lucide-react";
 import { useRecipesByCategoryWithUser } from "@/hooks/use-recipes-query";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@khamudom/lumen-ui-react";
 import { useAuth } from "@/lib/auth-context";
 import Image from "next/image";
 import type { Recipe } from "@/types/recipe";
@@ -76,10 +76,9 @@ export default function CategoryPage() {
                 <Button
                   onClick={() => router.push("/")}
                   variant="ghost"
-                  iconOnly
-                >
-                  <ArrowLeft className={styles.buttonIcon} />
-                </Button>
+                  icon={<ArrowLeft className={styles.buttonIcon} />}
+                  aria-label="Back to home"
+                />
                 <h1 className={`${styles.mainTitle} page-header`}>
                   Category Not Found
                 </h1>
@@ -147,11 +146,11 @@ export default function CategoryPage() {
             </Button>
           ) : (
             <Button
-              href="/auth/signin"
+              onClick={() => router.push("/auth/signin")}
               className={styles.addButton}
               aria-label="Sign in to add recipe"
             >
-              <span>Sign In to Add Recipe</span>
+              Sign In to Add Recipe
             </Button>
           )}
         </div>
@@ -189,9 +188,12 @@ export default function CategoryPage() {
         <div className={styles.content}>
           <div className={`${styles.header} glass-morphism-bottom`}>
             <div className={styles.headerContent}>
-              <Button onClick={handleBack} variant="ghost" iconOnly>
-                <ArrowLeft className={styles.buttonIcon} />
-              </Button>
+              <Button
+                onClick={handleBack}
+                variant="ghost"
+                icon={<ArrowLeft className={styles.buttonIcon} />}
+                aria-label="Back"
+              />
               <h1 className={`${styles.mainTitle} page-header`}>
                 {category} Recipes
               </h1>

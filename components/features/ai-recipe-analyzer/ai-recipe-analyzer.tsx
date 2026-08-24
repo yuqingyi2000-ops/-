@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 import styles from "./ai-recipe-analyzer.module.css";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@khamudom/lumen-ui-react";
 import { uploadImageToSupabase } from "@/lib/image-upload";
 
 interface RecipeAnalysis {
@@ -290,11 +290,10 @@ export function AIRecipeAnalyzer({
         <Button
           variant="outline"
           onClick={onCancel}
-          iconOnly
+          icon={<ArrowLeft />}
           className={styles.cancelButton}
-        >
-          <ArrowLeft />
-        </Button>
+          aria-label="Cancel"
+        />
         <h1 className={`${styles.title} page-header`}>
           <Sparkles className={styles.sparklesIcon} />
           AI Recipe Analyzer
@@ -384,8 +383,8 @@ export function AIRecipeAnalyzer({
               onClick={() => fileInputRef.current?.click()}
               className={styles.uploadButton}
               disabled={isAnalyzing}
+              icon={<Upload className={styles.buttonIcon} />}
             >
-              <Upload className={styles.buttonIcon} />
               {imageData.length > 0 ? "Add More Images" : "Choose Images"}
             </Button>
             {imageData.length > 0 && (
@@ -393,8 +392,8 @@ export function AIRecipeAnalyzer({
                 variant="outline"
                 onClick={removeAllImages}
                 disabled={isAnalyzing}
+                icon={<X className={styles.buttonIcon} />}
               >
-                <X className={styles.buttonIcon} />
                 Clear All
               </Button>
             )}
@@ -413,21 +412,10 @@ export function AIRecipeAnalyzer({
             onClick={analyzeRecipe}
             disabled={imageData.length === 0 || isAnalyzing}
             className={styles.analyzeButton}
-            size="large"
+            loading={isAnalyzing}
+            icon={!isAnalyzing ? <Sparkles className={styles.buttonIcon} /> : undefined}
           >
-            {isAnalyzing ? (
-              <>
-                <Loader2
-                  className={`${styles.buttonIcon} ${styles.spinning}`}
-                />
-                Analyzing Recipe...
-              </>
-            ) : (
-              <>
-                <Sparkles className={styles.buttonIcon} />
-                Analyze Recipe
-              </>
-            )}
+            {isAnalyzing ? "Analyzing Recipe..." : "Analyze Recipe"}
           </Button>
 
           {isAnalyzing && (

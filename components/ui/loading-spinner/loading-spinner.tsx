@@ -41,7 +41,7 @@ export function LoadingSpinner({
         setAnimationData(data);
         setIsLoading(false);
       } catch (err) {
-        console.error("Error loading Lottie animation:", err);
+        console.warn("Failed to load Lottie animation");
         setError(err instanceof Error ? err.message : "Failed to load animation");
         setIsLoading(false);
       }

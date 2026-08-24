@@ -1,5 +1,6 @@
 "use client";
 
+import { Skeleton } from "@khamudom/lumen-ui-react";
 import styles from "./loading-skeleton.module.css";
 
 interface LoadingSkeletonProps {
@@ -15,18 +16,18 @@ export function LoadingSkeleton({
     <div key={index} className={styles.skeleton}>
       {type === "recipe" ? (
         <>
-          <div className={styles.imageSkeleton}></div>
+          <Skeleton className={styles.imageSkeleton} />
           <div className={styles.contentSkeleton}>
-            <div className={styles.titleSkeleton}></div>
-            <div className={styles.descriptionSkeleton}></div>
+            <Skeleton className={styles.titleSkeleton} />
+            <Skeleton className={styles.descriptionSkeleton} />
             <div className={styles.metaSkeleton}>
-              <div className={styles.metaItemSkeleton}></div>
-              <div className={styles.metaItemSkeleton}></div>
+              <Skeleton className={styles.metaItemSkeleton} />
+              <Skeleton className={styles.metaItemSkeleton} />
             </div>
           </div>
         </>
       ) : (
-        <div className={styles.categorySkeleton}></div>
+        <Skeleton className={styles.categorySkeleton} />
       )}
     </div>
   ));

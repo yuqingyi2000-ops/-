@@ -2,6 +2,7 @@
 
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { Button, Input } from "@khamudom/lumen-ui-react";
 import styles from "./search-controls.module.css";
 import { useCallback, useEffect, useState } from "react";
 
@@ -32,7 +33,7 @@ export function SearchControls({ initialQuery = "" }: SearchControlsProps) {
     <div className={styles.controls}>
       <form onSubmit={handleSearchSubmit} className={styles.searchContainer}>
         <div className={styles.inputWrapper}>
-          <input
+          <Input
             placeholder="Search recipes, ingredients, categories"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
@@ -40,13 +41,12 @@ export function SearchControls({ initialQuery = "" }: SearchControlsProps) {
             type="search"
             aria-label="Search recipes"
           />
-          <button
+          <Button
             type="submit"
             className={styles.searchButton}
             aria-label="Search recipes"
-          >
-            <Search className={styles.buttonIcon} aria-hidden="true" />
-          </button>
+            icon={<Search className={styles.buttonIcon} aria-hidden="true" />}
+          />
         </div>
       </form>
     </div>

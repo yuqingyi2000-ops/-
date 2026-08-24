@@ -10,8 +10,7 @@ import { Footer } from "@/components/layout/footer/footer";
 import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
 import { useFeaturedRecipes } from "@/hooks/use-recipes-query";
 import { usePageTransition } from "@/hooks/use-page-transition";
-import { Card } from "@/components/ui/card/card";
-import { Button } from "@/components/ui/button/button";
+import { Button, Card } from "@khamudom/lumen-ui-react";
 import type { Recipe } from "@/types/recipe";
 import styles from "../home.module.css";
 

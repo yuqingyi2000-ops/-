@@ -1,6 +1,36 @@
 .dropdownContainer {
   position: relative;
-  display: inline-block;
+  display: flex;
+  align-items: center;
+}
+
+.aboutDialog {
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.lumenDropdown {
+  line-height: 0;
+}
+
+.lumenDropdown :global(.lumen-dropdown__trigger--circle) {
+  background: transparent;
+  border: none;
+  min-height: unset;
+  min-width: unset;
+  line-height: 0;
+}
+
+.lumenDropdown :global(.lumen-dropdown__trigger--circle:hover) {
+  background: transparent;
+}
+
+.lumenDropdown :global(.lumen-dropdown__trigger--circle:hover) .avatar {
+  border-color: var(--secondary-color);
+}
+
+.lumenDropdown :global(.lumen-dropdown__trigger::marker) {
+  content: none;
 }
 
 .avatarButton {
@@ -14,6 +44,7 @@
 }
 
 .avatar {
+  position: relative;
   width: 36px;
   height: 36px;
   border-radius: 50%;
@@ -34,6 +65,7 @@
   font-weight: bold;
   font-size: 1.1rem;
   color: var(--primary-color);
+  z-index: 1;
 }
 
 .dropdown {

@@ -89,10 +89,11 @@ export function About() {
             <h4>Technology Stack</h4>
             <ul>
               <li><strong>Frontend:</strong> Next.js 15, React 18, TypeScript</li>
+              <li><strong>UI:</strong> @khamudom/lumen-ui-react</li>
               <li><strong>Database:</strong> Supabase (PostgreSQL)</li>
               <li><strong>Authentication:</strong> Supabase Auth</li>
               <li><strong>AI Features:</strong> OpenAI API</li>
-              <li><strong>Styling:</strong> CSS Modules</li>
+              <li><strong>Styling:</strong> CSS Modules + Lumen design tokens</li>
               <li><strong>PWA:</strong> Next.js PWA</li>
             </ul>
           </div>

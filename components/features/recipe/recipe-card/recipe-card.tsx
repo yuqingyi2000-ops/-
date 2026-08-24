@@ -2,6 +2,7 @@
 
 import React from "react";
 import { Clock, Users, Tag, User, ChefHat } from "lucide-react";
+import { Badge } from "@khamudom/lumen-ui-react";
 import type { Recipe } from "@/types/recipe";
 import { useAuth } from "@/lib/auth-context";
 import styles from "./recipe-card.module.css";
@@ -67,10 +68,10 @@ export const RecipeCard = React.memo(function RecipeCard({
           <span className={styles.categoryText}>{recipe.category}</span>
         </div>
         {isMyRecipe && !recipe.featured && (
-          <div className={styles.myRecipeBadge}>
+          <Badge variant="primary" appearance="tint" className={styles.myRecipeBadge}>
             <User className={styles.myRecipeIcon} />
             <span className={styles.myRecipeText}>My Recipe</span>
-          </div>
+          </Badge>
         )}
       </div>
 

@@ -1,7 +1,8 @@
 "use client";
 
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useRouter, useParams, useSearchParams } from "next/navigation";
+import { AlertDialog, Button } from "@khamudom/lumen-ui-react";
 import { RecipeDetail } from "@/components/features/recipe/recipe-detail/recipe-detail";
 import { ErrorBoundary } from "@/components/ui/error-boundary/error-boundary";
 import { LoadingSpinner } from "@/components/ui/loading-spinner/loading-spinner";
@@ -12,6 +13,7 @@ function RecipeDetailContent() {
   const params = useParams();
   const searchParams = useSearchParams();
   const recipeSlug = params.slug as string;
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
 
   const { data: recipe, isLoading, error } = useRecipeBySlug(recipeSlug);
 
@@ -23,36 +25,33 @@ function RecipeDetailContent() {
     }
   }, [recipe, router]);
 
-  const handleDelete = useCallback(async () => {
-    if (recipe && confirm("Are you sure you want to delete this recipe?")) {
-      try {
-        await deleteRecipeMutation.mutateAsync(recipe.id);
-        router.push("/");
-      } catch (err) {
-        console.error("Error deleting recipe:", err);
-        // Error is handled by the mutation hook
-      }
+  const handleDeleteRequest = useCallback(() => {
+    setIsDeleteOpen(true);
+  }, []);
+
+  const handleDeleteConfirm = useCallback(async () => {
+    if (!recipe) return;
+    try {
+      await deleteRecipeMutation.mutateAsync(recipe.id);
+      setIsDeleteOpen(false);
+      router.push("/");
+    } catch (err) {
+      console.error("Error deleting recipe:", err);
     }
   }, [recipe, deleteRecipeMutation, router]);
 
   const handleBack = useCallback(() => {
-    // Check if we came from the edit page
     const fromEdit = searchParams.get("from") === "edit";
 
     if (fromEdit) {
-      // If we came from edit, go directly to home
       router.push("/");
+    } else if (window.history.length > 1) {
+      router.back();
     } else {
-      // Use browser history to go back, or fallback to home
-      if (window.history.length > 1) {
-        router.back();
-      } else {
-        router.push("/");
-      }
+      router.push("/");
     }
   }, [router, searchParams]);
 
-  // Show loading state
   if (isLoading) {
     return (
       <div style={{ padding: "10%" }}>
@@ -61,7 +60,6 @@ function RecipeDetailContent() {
     );
   }
 
-  // Show error state
   if (error) {
     return (
       <div
@@ -73,20 +71,31 @@ function RecipeDetailContent() {
         }}
       >
         <p>Failed to load recipe. Please try again.</p>
-        <button onClick={handleBack}>Back to Recipes</button>
+        <Button onClick={handleBack}>Back to Recipes</Button>
       </div>
     );
   }
 
-  // Show recipe content
   return (
     recipe && (
-      <RecipeDetail
-        recipe={recipe}
-        onBack={handleBack}
-        onEdit={handleEdit}
-        onDelete={handleDelete}
-      />
+      <>
+        <RecipeDetail
+          recipe={recipe}
+          onBack={handleBack}
+          onEdit={handleEdit}
+          onDelete={handleDeleteRequest}
+        />
+        <AlertDialog
+          open={isDeleteOpen}
+          onOpenChange={setIsDeleteOpen}
+          title="Delete recipe?"
+          description="Are you sure you want to delete this recipe? This action cannot be undone."
+          destructive
+          actionLabel="Delete"
+          cancelLabel="Cancel"
+          onAction={handleDeleteConfirm}
+        />
+      </>
     )
   );
 }

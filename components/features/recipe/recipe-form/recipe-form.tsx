@@ -20,7 +20,6 @@ import {
   X,
   Upload,
   ImageIcon,
-  Loader2,
   Sparkles,
   ArrowLeft,
   FolderPlus,
@@ -38,12 +37,30 @@ import { AIRecipeAnalyzer } from "@/components/features/ai-recipe-analyzer/ai-re
 import { useAuth } from "@/lib/auth-context";
 import styles from "./recipe-form.module.css";
 import Image from "next/image";
-import { Button } from "@/components/ui/button/button";
+import {
+  Button,
+  Input,
+  Select,
+  Switch,
+  Textarea,
+  Toast,
+} from "@khamudom/lumen-ui-react";
 import {
   uploadImageToSupabase,
   deleteImageFromSupabase,
   isBase64Image,
 } from "@/lib/image-upload";
+
+const CATEGORY_OPTIONS = [
+  { value: "Appetizer", label: "Appetizer" },
+  { value: "Breakfast", label: "Breakfast" },
+  { value: "Lunch", label: "Lunch" },
+  { value: "Dinner", label: "Dinner" },
+  { value: "Side Dish", label: "Side Dish" },
+  { value: "Dessert", label: "Dessert" },
+  { value: "Snack", label: "Snack" },
+  { value: "Beverage", label: "Beverage" },
+];
 
 interface RecipeFormProps {
   recipe?: Recipe | null;
@@ -178,6 +195,7 @@ export function RecipeForm({
   };
 
   const [isUploadingImage, setIsUploadingImage] = useState(false);
+  const [formToast, setFormToast] = useState<string | null>(null);
 
   const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -185,13 +203,13 @@ export function RecipeForm({
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      alert("Please select a valid image file");
+      setFormToast("Please select a valid image file");
       return;
     }
 
     // Validate file size (20MB limit)
     if (file.size > 20 * 1024 * 1024) {
-      alert("Image file size must be less than 20MB");
+      setFormToast("Image file size must be less than 20MB");
       return;
     }
 
@@ -217,7 +235,7 @@ export function RecipeForm({
       }));
     } catch (error) {
       console.error("Error uploading image:", error);
-      alert("Failed to upload image. Please try again.");
+      setFormToast("Failed to upload image. Please try again.");
     } finally {
       setIsUploadingImage(false);
     }
@@ -558,11 +576,23 @@ export function RecipeForm({
   return (
     <div className={styles.container}>
       <div className={styles.content}>
+        {formToast && (
+          <Toast
+            variant="danger"
+            title="Upload error"
+            description={formToast}
+            onClose={() => setFormToast(null)}
+          />
+        )}
         {/* Hero Section */}
         <div className={styles.header}>
-          <Button onClick={onCancel} variant="ghost" iconOnly>
-            <ArrowLeft />
-          </Button>
+          <Button
+            type="button"
+            onClick={onCancel}
+            variant="ghost"
+            icon={<ArrowLeft />}
+            aria-label="Back"
+          />
           <h1 className={`${styles.title} section-header`}>
             {recipe ? "Edit Recipe" : "Add New Recipe"}
           </h1>
@@ -590,8 +620,11 @@ export function RecipeForm({
                       </p>
                     </div>
                   </div>
-                  <Button onClick={() => setShowAIAnalyzer(true)}>
-                    <Sparkles className={styles.buttonIcon} />
+                  <Button
+                    type="button"
+                    onClick={() => setShowAIAnalyzer(true)}
+                    icon={<Sparkles className={styles.buttonIcon} />}
+                  >
                     Analyze Recipe Image
                   </Button>
                 </div>
@@ -665,14 +698,16 @@ export function RecipeForm({
                     className={styles.hiddenInput}
                   />
                   <Button
+                    type="button"
                     onClick={() => fileInputRef.current?.click()}
                     disabled={isUploadingImage}
+                    loading={isUploadingImage}
+                    icon={
+                      !isUploadingImage ? (
+                        <Upload className={styles.buttonIcon} />
+                      ) : undefined
+                    }
                   >
-                    {isUploadingImage ? (
-                      <Loader2 className={styles.buttonIcon} />
-                    ) : (
-                      <Upload className={styles.buttonIcon} />
-                    )}
                     {isUploadingImage
                       ? "Uploading..."
                       : formData.image
@@ -692,180 +727,133 @@ export function RecipeForm({
             </div>
             <div className={styles.cardContent}>
               <div className={styles.inputGrid}>
-                <div className={styles.inputGroup}>
-                  <label htmlFor="title" className={styles.label}>
-                    Recipe Title *
-                  </label>
-                  <input
-                    id="title"
-                    value={formData.title}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        title: e.target.value,
-                      }))
-                    }
-                    placeholder="Enter recipe title..."
-                    className={styles.input}
-                    required
-                  />
-                </div>
-                <div className={styles.inputGroup}>
-                  <label htmlFor="category" className={styles.label}>
-                    Category *
-                  </label>
-                  <select
-                    value={formData.category}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        category: e.target.value,
-                      }))
-                    }
-                    className={styles.select}
-                    required
-                  >
-                    <option value="">Select category</option>
-                    <option value="Appetizer">Appetizer</option>
-                    <option value="Breakfast">Breakfast</option>
-                    <option value="Lunch">Lunch</option>
-                    <option value="Dinner">Dinner</option>
-                    <option value="Side Dish">Side Dish</option>
-                    <option value="Dessert">Dessert</option>
-                    <option value="Snack">Snack</option>
-                    <option value="Beverage">Beverage</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className={styles.inputGroup}>
-                <label htmlFor="description" className={styles.label}>
-                  Description
-                </label>
-                <textarea
-                  id="description"
-                  value={formData.description}
+                <Input
+                  id="title"
+                  label="Recipe Title *"
+                  value={formData.title}
                   onChange={(e) =>
                     setFormData((prev) => ({
                       ...prev,
-                      description: e.target.value,
+                      title: e.target.value,
                     }))
                   }
-                  placeholder="Describe your recipe..."
-                  className={styles.textarea}
+                  placeholder="Enter recipe title..."
+                  className={styles.inputGroup}
+                  required
+                />
+                <Select
+                  id="category"
+                  label="Category *"
+                  value={formData.category}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      category: e.target.value,
+                    }))
+                  }
+                  placeholder="Select category"
+                  options={CATEGORY_OPTIONS}
+                  className={styles.inputGroup}
+                  required
                 />
               </div>
 
+              <Textarea
+                id="description"
+                label="Description"
+                value={formData.description}
+                onChange={(e) =>
+                  setFormData((prev) => ({
+                    ...prev,
+                    description: e.target.value,
+                  }))
+                }
+                placeholder="Describe your recipe..."
+                className={styles.inputGroup}
+              />
+
               {/* Admin-only featured recipe toggle */}
               {isAdmin && (
-                <div className={styles.inputGroup}>
-                  <label className={styles.label}>Featured</label>
-                  <div className={styles.toggleContainer}>
-                    <input
-                      type="checkbox"
-                      id="featured"
-                      checked={formData.featured}
-                      onChange={(e) =>
-                        setFormData((prev) => ({
-                          ...prev,
-                          featured: e.target.checked,
-                        }))
-                      }
-                      className={styles.toggleInput}
-                    />
-                    <label htmlFor="featured" className={styles.toggleLabel}>
-                      <span className={styles.toggleText}>
-                        {formData.featured ? "⭐ Featured" : "Mark as featured"}
-                      </span>
-                      <span className={styles.toggleDescription}>
-                        Featured recipes appear on the homepage
-                      </span>
-                    </label>
-                  </div>
-                </div>
+                <Switch
+                  id="featured"
+                  checked={formData.featured}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      featured: e.target.checked,
+                    }))
+                  }
+                  label={
+                    formData.featured ? "⭐ Featured" : "Mark as featured"
+                  }
+                  helperText="Featured recipes appear on the homepage"
+                  className={styles.inputGroup}
+                />
               )}
 
               {/* Admin-only featured order input */}
               {isAdmin && formData.featured && (
-                <div className={styles.inputGroup}>
-                  <label htmlFor="featuredOrder" className={styles.label}>
-                    Featured Order
-                  </label>
-                  <input
-                    id="featuredOrder"
-                    type="number"
-                    min="1"
-                    value={formData.featuredOrder || ""}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        featuredOrder: e.target.value
-                          ? parseInt(e.target.value)
-                          : undefined,
-                      }))
-                    }
-                    placeholder="e.g., 1 (first), 2 (second), etc."
-                    className={styles.input}
-                  />
-                  <span className={styles.helpText}>
-                    Lower numbers appear first. Leave empty for default order.
-                  </span>
-                </div>
+                <Input
+                  id="featuredOrder"
+                  type="number"
+                  min={1}
+                  label="Featured Order"
+                  value={formData.featuredOrder || ""}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      featuredOrder: e.target.value
+                        ? parseInt(e.target.value)
+                        : undefined,
+                    }))
+                  }
+                  placeholder="e.g., 1 (first), 2 (second), etc."
+                  helperText="Lower numbers appear first. Leave empty for default order."
+                  className={styles.inputGroup}
+                />
               )}
 
               <div className={styles.metaGrid}>
-                <div className={styles.inputGroup}>
-                  <label htmlFor="prepTime" className={styles.label}>
-                    Prep Time
-                  </label>
-                  <input
-                    id="prepTime"
-                    value={formData.prepTime}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        prepTime: e.target.value,
-                      }))
-                    }
-                    placeholder="e.g., 30 minutes"
-                    className={styles.input}
-                  />
-                </div>
-                <div className={styles.inputGroup}>
-                  <label htmlFor="cookTime" className={styles.label}>
-                    Cook Time
-                  </label>
-                  <input
-                    id="cookTime"
-                    value={formData.cookTime}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        cookTime: e.target.value,
-                      }))
-                    }
-                    placeholder="e.g., 45 minutes"
-                    className={styles.input}
-                  />
-                </div>
-                <div className={styles.inputGroup}>
-                  <label htmlFor="servings" className={styles.label}>
-                    Servings
-                  </label>
-                  <input
-                    id="servings"
-                    type="text"
-                    value={formData.servings}
-                    onChange={(e) =>
-                      setFormData((prev) => ({
-                        ...prev,
-                        servings: e.target.value,
-                      }))
-                    }
-                    placeholder="e.g., 4-6 people"
-                    className={styles.input}
-                  />
-                </div>
+                <Input
+                  id="prepTime"
+                  label="Prep Time"
+                  value={formData.prepTime}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      prepTime: e.target.value,
+                    }))
+                  }
+                  placeholder="e.g., 30 minutes"
+                  className={styles.inputGroup}
+                />
+                <Input
+                  id="cookTime"
+                  label="Cook Time"
+                  value={formData.cookTime}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      cookTime: e.target.value,
+                    }))
+                  }
+                  placeholder="e.g., 45 minutes"
+                  className={styles.inputGroup}
+                />
+                <Input
+                  id="servings"
+                  type="text"
+                  label="Servings"
+                  value={formData.servings}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      servings: e.target.value,
+                    }))
+                  }
+                  placeholder="e.g., 4-6 people"
+                  className={styles.inputGroup}
+                />
               </div>
             </div>
           </div>
@@ -931,22 +919,24 @@ export function RecipeForm({
                   ))}
 
                   <Button
+                    type="button"
                     onClick={() => addIngredientToGroup(groupIndex)}
                     variant="outline"
                     className={styles.addIngredientButton}
+                    icon={<Plus className={styles.buttonIcon} />}
                   >
-                    <Plus className={styles.buttonIcon} />
                     Add Ingredient
                   </Button>
                 </div>
               ))}
 
               <Button
+                type="button"
                 onClick={addIngredientGroup}
                 variant="outline"
                 className={styles.addGroupButton}
+                icon={<FolderPlus className={styles.buttonIcon} />}
               >
-                <FolderPlus className={styles.buttonIcon} />
                 Add Ingredient Group
               </Button>
             </div>
@@ -1016,22 +1006,24 @@ export function RecipeForm({
                   ))}
 
                   <Button
+                    type="button"
                     onClick={() => addInstructionToGroup(groupIndex)}
                     variant="outline"
                     className={styles.addIngredientButton}
+                    icon={<Plus className={styles.buttonIcon} />}
                   >
-                    <Plus className={styles.buttonIcon} />
                     Add Step
                   </Button>
                 </div>
               ))}
 
               <Button
+                type="button"
                 onClick={addInstructionGroup}
                 variant="outline"
                 className={styles.addGroupButton}
+                icon={<FolderPlus className={styles.buttonIcon} />}
               >
-                <FolderPlus className={styles.buttonIcon} />
                 Add Instruction Group
               </Button>
             </div>
@@ -1040,25 +1032,21 @@ export function RecipeForm({
           {/* Submit Buttons */}
           <div className={styles.submitButtons}>
             <Button
+              type="button"
               variant="outline"
               onClick={onCancel}
               disabled={isSubmitting}
             >
               Cancel
             </Button>
-            <Button type="submit" disabled={isSubmitting}>
-              {isSubmitting ? (
-                <div className={styles.loadingTextContainer}>
-                  <Loader2
-                    className={`${styles.buttonIcon} ${styles.spinning}`}
-                  />
-                  {recipe ? "Updating..." : "Saving..."}
-                </div>
-              ) : recipe ? (
-                "Update Recipe"
-              ) : (
-                "Save Recipe"
-              )}
+            <Button type="submit" loading={isSubmitting}>
+              {isSubmitting
+                ? recipe
+                  ? "Updating..."
+                  : "Saving..."
+                : recipe
+                ? "Update Recipe"
+                : "Save Recipe"}
             </Button>
           </div>
         </form>

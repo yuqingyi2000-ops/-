@@ -3,7 +3,6 @@
 import React, { useCallback, useRef, useState } from "react";
 import dynamic from "next/dynamic";
 import { AIChefButton } from "./ai-chef-button/ai-chef-button";
-import { lottieCache } from "@/lib/lottie-cache";
 
 const AIChefChatWindow = dynamic(
   () =>
@@ -13,24 +12,13 @@ const AIChefChatWindow = dynamic(
   { ssr: false }
 );
 
-const DEFAULT_ANIMATION_PATH =
-  "/assets/lottie/Animation - 1751255045745.json";
-
 export function AIChefWidget() {
   const [isChatOpen, setIsChatOpen] = useState(false);
   const buttonRef = useRef<HTMLButtonElement>(null);
-  const lottiePreloadedRef = useRef(false);
-
-  const preloadChatAssets = useCallback(() => {
-    if (lottiePreloadedRef.current) return;
-    lottiePreloadedRef.current = true;
-    lottieCache.preloadAnimation(DEFAULT_ANIMATION_PATH).catch(console.error);
-  }, []);
 
   const handleAIChefClick = useCallback(() => {
-    preloadChatAssets();
     setIsChatOpen((open) => !open);
-  }, [preloadChatAssets]);
+  }, []);
 
   const handleCloseChat = useCallback(() => {
     setIsChatOpen(false);

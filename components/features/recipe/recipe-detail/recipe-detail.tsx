@@ -6,7 +6,7 @@ import { useAuth } from "@/lib/auth-context";
 import type { Recipe } from "@/types/recipe";
 import styles from "./recipe-detail.module.css";
 import Image from "next/image";
-import { Button } from "@/components/ui/button/button";
+import { Button } from "@khamudom/lumen-ui-react";
 
 interface RecipeDetailProps {
   recipe: Recipe;
@@ -102,9 +102,12 @@ export function RecipeDetail({
         {/* Hero Section */}
         <div className={`${styles.headerControls} glass-morphism-bottom`}>
           <div className={styles.headerControlsContent}>
-            <Button onClick={onBack} variant="ghost" iconOnly>
-              <ArrowLeft className={styles.buttonIcon} />
-            </Button>
+            <Button
+              onClick={onBack}
+              variant="ghost"
+              icon={<ArrowLeft className={styles.buttonIcon} />}
+              aria-label="Back"
+            />
             <h1 className={`${styles.recipeTitle} section-header`}>
               {recipe.title}
             </h1>
@@ -114,12 +117,18 @@ export function RecipeDetail({
         {/* Action Buttons */}
         {isOwner && (
           <div className={styles.actionButtons}>
-            <Button onClick={onEdit} variant="outline" iconOnly>
-              <Edit className={styles.buttonIcon} />
-            </Button>
-            <Button onClick={onDelete} variant="outline" iconOnly>
-              <Trash2 className={styles.buttonIcon} />
-            </Button>
+            <Button
+              onClick={onEdit}
+              variant="outline"
+              icon={<Edit className={styles.buttonIcon} />}
+              aria-label="Edit recipe"
+            />
+            <Button
+              onClick={onDelete}
+              variant="outline"
+              icon={<Trash2 className={styles.buttonIcon} />}
+              aria-label="Delete recipe"
+            />
           </div>
         )}
 

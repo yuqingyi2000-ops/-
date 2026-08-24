@@ -18,11 +18,9 @@
 }
 
 .searchInput {
-  padding-left: 1rem;
   background-color: var(--color-input-background);
   border: 1px solid var(--color-border-secondary);
   border-radius: var(--radius-large);
-  height: 3rem;
   width: 100%;
   transition: all 0.2s ease;
   color: var(--color-input-foreground);

@@ -288,6 +288,26 @@ input {
   }
 }
 
+html.overlay-open,
+html.overlay-open body {
+  overflow: hidden;
+  overscroll-behavior: none;
+}
+
+html.overlay-open body {
+  position: fixed;
+  left: 0;
+  right: 0;
+  width: 100%;
+}
+
+.lumen-dialog,
+.lumen-alert-dialog {
+  max-height: min(90dvh, 100%);
+  overflow: auto;
+  overscroll-behavior: contain;
+}
+
 /* AI Chef overlay animations */
 @keyframes fadeIn {
   from {

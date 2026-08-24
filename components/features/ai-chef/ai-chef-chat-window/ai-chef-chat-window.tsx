@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect, RefObject } from "react";
 import { X, Maximize2, Minimize2 } from "lucide-react";
 import { AIChefMessage } from "../ai-chef-message/ai-chef-message";
 import { LoadingSpinner } from "../../../ui/loading-spinner/loading-spinner";
-import { Button } from "@/components/ui/button/button";
+import { Button, Textarea } from "@khamudom/lumen-ui-react";
 import { sendMessageToAIStream } from "../utils/openai";
 import styles from "./ai-chef-chat-window.module.css";
 
@@ -172,7 +172,7 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
         <div ref={messagesEndRef} />
       </div>
       <div className={styles.inputArea}>
-        <textarea
+        <Textarea
           ref={textareaRef}
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -180,10 +180,12 @@ export function AIChefChatWindow({ onClose, buttonRef }: Props) {
           placeholder="How can I help?"
           className={styles.input}
           rows={1}
+          aria-label="Message Chef Gusto"
         />
         <Button
           onClick={handleSend}
           disabled={loading}
+          loading={loading}
           className={styles.sendButton}
         >
           Send

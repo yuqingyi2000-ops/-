@@ -2,6 +2,7 @@ import withPWA from "next-pwa";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  transpilePackages: ["@khamudom/lumen-ui-react"],
   eslint: {
     ignoreDuringBuilds: false,
   },
