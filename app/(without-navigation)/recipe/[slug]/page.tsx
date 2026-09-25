@@ -70,8 +70,8 @@ function RecipeDetailContent() {
           margin: "0 auto",
         }}
       >
-        <p>Failed to load recipe. Please try again.</p>
-        <Button onClick={handleBack}>Back to Recipes</Button>
+        <p>菜谱暂时没有加载出来，请稍后再试。</p>
+        <Button onClick={handleBack}>返回菜谱</Button>
       </div>
     );
   }
@@ -88,11 +88,11 @@ function RecipeDetailContent() {
         <AlertDialog
           open={isDeleteOpen}
           onOpenChange={setIsDeleteOpen}
-          title="Delete recipe?"
-          description="Are you sure you want to delete this recipe? This action cannot be undone."
+          title="删除这道菜谱？"
+          description="删除后无法恢复，请确认是否继续。"
           destructive
-          actionLabel="Delete"
-          cancelLabel="Cancel"
+          actionLabel="删除"
+          cancelLabel="取消"
           onAction={handleDeleteConfirm}
         />
       </>

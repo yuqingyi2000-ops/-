@@ -16,48 +16,48 @@ interface AuthFormProps {
 
 const AUTH_CONTENT = {
   signup: {
-    title: "Create Account",
-    buttonText: "Create Account",
-    loadingText: "Creating account...",
+    title: "创建账号",
+    buttonText: "创建账号",
+    loadingText: "正在创建…",
   },
   "forgot-password": {
-    title: "Reset Password",
-    buttonText: "Send Reset Link",
-    loadingText: "Sending reset link...",
+    title: "找回密码",
+    buttonText: "发送重置邮件",
+    loadingText: "正在发送…",
   },
   signin: {
-    title: "Sign In",
-    buttonText: "Sign In",
-    loadingText: "Signing in...",
+    title: "登录饭饭簿",
+    buttonText: "登录",
+    loadingText: "正在登录…",
   },
 } as const;
 
 const AUTH_MESSAGES = {
-  signup: "Check your email for the confirmation link!",
-  "forgot-password": "Check your email for the password reset link!",
+  signup: "确认邮件已发送，请打开邮箱完成注册。",
+  "forgot-password": "密码重置邮件已发送，请打开邮箱查看。",
   signin: "",
 } as const;
 
 const AUTH_LINKS = {
   signin: [
     {
-      text: "Forgot your password?",
+      text: "忘记密码？",
       mode: "forgot-password" as const,
     },
     {
-      text: "Don't have an account? Sign up",
+      text: "还没有账号？立即注册",
       mode: "signup" as const,
     },
   ],
   signup: [
     {
-      text: "Already have an account? Sign in",
+      text: "已经有账号？去登录",
       mode: "signin" as const,
     },
   ],
   "forgot-password": [
     {
-      text: "Back to sign in",
+      text: "返回登录",
       mode: "signin" as const,
     },
   ],
@@ -105,7 +105,7 @@ export function AuthForm({ mode, onSuccess, onModeChange }: AuthFormProps) {
       }
     } catch (error: unknown) {
       if (error instanceof Error) setError(error.message);
-      else setError("An unknown error occurred.");
+      else setError("发生了未知错误，请稍后再试。");
     } finally {
       setLoading(false);
     }
@@ -129,7 +129,7 @@ export function AuthForm({ mode, onSuccess, onModeChange }: AuthFormProps) {
       <form onSubmit={handleSubmit} className={styles.form}>
         <Input
           id="email"
-          label="Email"
+          label="邮箱"
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
@@ -142,7 +142,7 @@ export function AuthForm({ mode, onSuccess, onModeChange }: AuthFormProps) {
           <div className={styles.field}>
             <Input
               id="password"
-              label="Password"
+              label="密码"
               type={showPassword ? "text" : "password"}
               value={password}
               onChange={(e) => setPassword(e.target.value)}
@@ -155,7 +155,7 @@ export function AuthForm({ mode, onSuccess, onModeChange }: AuthFormProps) {
               type="button"
               className={styles.eyeButton}
               onClick={() => setShowPassword(!showPassword)}
-              aria-label={showPassword ? "Hide password" : "Show password"}
+              aria-label={showPassword ? "隐藏密码" : "显示密码"}
             >
               {showPassword ? (
                 <svg
@@ -220,7 +220,7 @@ export function AuthForm({ mode, onSuccess, onModeChange }: AuthFormProps) {
           className={styles.guestButton}
           onClick={() => router.push("/")}
         >
-          Continue as Guest
+          先逛一逛
         </Button>
       </div>
     </div>

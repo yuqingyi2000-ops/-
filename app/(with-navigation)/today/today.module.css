@@ -1,0 +1,8 @@
+.page { max-width: 760px; min-height: 100vh; margin: 0 auto; padding: 2rem 1rem 7rem; }
+.page header span { color: #819083; font-size: .85rem; }
+.page h1 { margin: .45rem 0; color: #405445; font-size: 2rem; }
+.page header p { margin: 0; color: #8a948c; }
+.card { margin-top: 2rem; padding: 3.5rem 1.5rem; text-align: center; background: #fffdf7; border: 1px solid rgba(112,137,114,.14); border-radius: 28px; }
+.icon { display: grid; width: 58px; height: 58px; margin: 0 auto; place-items: center; background: #edf2e9; color: #708873; border-radius: 20px; }
+.card h2 { margin: 1rem 0 .4rem; color: #405445; }
+.card p { margin: 0 auto; max-width: 320px; color: #8a948c; line-height: 1.7; }

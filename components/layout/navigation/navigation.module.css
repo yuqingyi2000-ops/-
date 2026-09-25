@@ -1,9 +1,8 @@
 .nav {
-  background: var(--color-linear-gradient-dark);
-  color: white;
-  padding: 1rem 0;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid var(--secondary-color);
+  background: rgba(250,247,237,.9);
+  color: #405445;
+  padding: .75rem 0;
+  border-bottom: 1px solid rgba(112,137,114,.12);
 }
 
 .container {
@@ -31,12 +30,13 @@
   font-size: 2rem;
   font-family: var(--font-family-cormorant);
   font-weight: var(--font-weight-bold);
-  color: var(--color-foreground-primary-light);
+  color: #405445;
   line-height: 1;
   text-align: center;
   display: flex;
   column-gap: 0.5rem;
 }
+.note { color: #849087; font-size: .78rem; }
 
 .menu {
   display: flex;
@@ -74,14 +74,5 @@
     font-size: 1.75rem;
   }
 
-  .logoText span,
-  .addButton span {
-    display: none;
-  }
-
-  .menu {
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: var(--spacing-medium);
-  }
+  .note { display: none; }
 }

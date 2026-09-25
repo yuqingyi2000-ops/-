@@ -19,8 +19,8 @@ export default async function HomePage() {
   const supabase = await createClient();
 
   await queryClient.prefetchQuery({
-    queryKey: recipeKeys.featured(),
-    queryFn: () => database.getFeaturedRecipes(supabase),
+    queryKey: recipeKeys.lists(),
+    queryFn: () => database.getRecipes(supabase),
   });
 
   return (

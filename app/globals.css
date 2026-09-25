@@ -1,18 +1,18 @@
 :root {
   /*Colors*/
-  --primary-color: #7c021d;
-  --primary-dark-color: #5e0118;
-  --primary-light-color: #fefcf3;
-  --secondary-color: #fbbf24;
-  --secondary-light-color: #fef3c7;
+  --primary-color: #748b76;
+  --primary-dark-color: #405445;
+  --primary-light-color: #fffdf7;
+  --secondary-color: #eadb9c;
+  --secondary-light-color: #fff3c9;
   --secondary-light-color-hover: hsla(48, 96%, 89%, 0.1);
-  --secondary-dark-color: #92400e;
-  --accent-color: #d97706;
+  --secondary-dark-color: #826f37;
+  --accent-color: #d99058;
   --white-color: #ffffff;
   --black-color: #000000;
 
-  --background-color: #fdf6e3;
-  --foreground-color: #2c1a12;
+  --background-color: #faf7ed;
+  --foreground-color: #3f4b42;
 
   --color-linear-gradient: linear-gradient(135deg, #fef7ed 0%, #fed7aa 100%);
   --color-linear-gradient-dark: linear-gradient(
@@ -121,8 +121,8 @@
   /* Radius */
   --radius-small: 0.25rem; /* 4px */
   --radius-medium: 0.375rem; /* 6px */
-  --radius-large: 0.5rem; /* 8px */
-  --radius-xl: 0.75rem; /* 12px */
+  --radius-large: 1rem;
+  --radius-xl: 1.5rem;
   --radius-round: 9999px; /* fully rounded (pill/circle) */
 
   /* Spacing */

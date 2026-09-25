@@ -1,12 +1,12 @@
 {
-  "name": "The Recipe Room",
-  "short_name": "Recipe Room",
-  "description": "A personal recipe collection app to easily save, find, and cook your favorite meals.",
+  "name": "饭饭簿",
+  "short_name": "饭饭簿",
+  "description": "和喜欢的人一起收藏每一顿好好吃饭的日子",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",
-  "background_color": "#7c021d",
-  "theme_color": "#7c021d",
+  "background_color": "#faf7ed",
+  "theme_color": "#748b76",
   "icons": [
     {
       "src": "/icons/icon-192x192.png",

@@ -19,14 +19,15 @@
 
 // Available recipe categories for organizing recipes
 export const CATEGORIES = [
-  "Appetizer",
-  "Breakfast",
-  "Lunch",
-  "Dinner",
-  "Side Dish",
-  "Dessert",
-  "Snack",
-  "Beverage",
+  "荤菜",
+  "素菜",
+  "汤",
+  "主食",
+  "早餐",
+  "快手菜",
+  "甜品",
+  "饮品",
+  "其他",
 ] as const;
 
 // Category icon mapping for Lucide icons
@@ -63,10 +64,10 @@ export const CATEGORY_FROM_SLUG = Object.fromEntries(
 export const SEARCH_DEBOUNCE_DELAY = 300;
 
 // Default content for pages when no specific content is provided
-export const DEFAULT_PAGE_TITLE = "Recipe Collection";
+export const DEFAULT_PAGE_TITLE = "饭饭簿";
 export const DEFAULT_PAGE_SUBTITLE =
-  "Save your favorites, discover new ones, and build your own recipe room to cook from anytime.";
-export const DEFAULT_FOOTER_QUOTE = '"The secret ingredient is always love"';
+  "今天也要好好吃饭呀 ♡";
+export const DEFAULT_FOOTER_QUOTE = '“好好吃饭，就是最温柔的小事。”';
 
 // Standardized error messages for consistent user feedback
 export const ERROR_MESSAGES = {

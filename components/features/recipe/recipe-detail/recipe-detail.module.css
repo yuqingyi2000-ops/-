@@ -247,3 +247,5 @@
   padding: 1.5rem;
   background: linear-gradient(135deg, #fefcf3 0%, #fef7ed 100%);
 }
+.menuAction { position: sticky; bottom: 1rem; display: flex; justify-content: center; padding: 1rem; }
+.menuAction button { width: min(100%, 480px); min-height: 54px; border-radius: 18px; }

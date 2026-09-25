@@ -32,7 +32,7 @@ export function ProtectedRoute({ children, fallback }: ProtectedRouteProps) {
           color: "var(--primary-color)",
         }}
       >
-        Loading...
+        正在加载…
       </div>
     );
   }

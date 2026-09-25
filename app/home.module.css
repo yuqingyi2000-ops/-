@@ -1,14 +1,30 @@
 .container {
   min-height: 100vh;
+  background: var(--background-color);
 }
 
 .content {
   position: relative;
   z-index: 10;
-  max-width: 1200px;
+  max-width: 980px;
   margin: 0 auto;
-  padding: 2rem 1rem;
+  padding: 1.5rem 1rem 7rem;
 }
+
+.hero { padding: 1.25rem 0 1rem; }
+.eyebrow { color: #829582; font-size: .68rem; letter-spacing: .18em; font-weight: 700; }
+.hero h1 { margin: .35rem 0 0; color: #405445; font-size: clamp(2.25rem, 10vw, 3.5rem); line-height: 1; }
+.hero p { margin: .75rem 0 0; color: #7c867d; font-size: 1rem; }
+.recipeSection { margin-top: 1.5rem; }
+.sectionHeading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem; }
+.sectionHeading h2 { margin: 0; color: #405445; font-size: 1.2rem; }
+.sectionHeading span { color: #8b948d; font-size: .85rem; }
+.recipeGrid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem; }
+.loading, .emptyState { margin: 2rem 0; padding: 3rem 1rem; border-radius: 24px; background: #fffdf7; text-align: center; color: #6b776d; }
+.emptyState svg { color: #8ca08d; }
+.emptyState h2 { margin: .75rem 0 .35rem; color: #405445; }
+.emptyState p { margin: 0 0 1rem; }
+@media (min-width: 720px) { .recipeGrid { grid-template-columns: repeat(3, 1fr); gap: 1.25rem; } }
 
 .loadingContainer {
   display: flex;

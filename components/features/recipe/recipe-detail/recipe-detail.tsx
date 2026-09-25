@@ -106,7 +106,7 @@ export function RecipeDetail({
               onClick={onBack}
               variant="ghost"
               icon={<ArrowLeft className={styles.buttonIcon} />}
-              aria-label="Back"
+              aria-label="返回"
             />
             <h1 className={`${styles.recipeTitle} section-header`}>
               {recipe.title}
@@ -121,13 +121,13 @@ export function RecipeDetail({
               onClick={onEdit}
               variant="outline"
               icon={<Edit className={styles.buttonIcon} />}
-              aria-label="Edit recipe"
+              aria-label="编辑菜谱"
             />
             <Button
               onClick={onDelete}
               variant="outline"
               icon={<Trash2 className={styles.buttonIcon} />}
-              aria-label="Delete recipe"
+              aria-label="删除菜谱"
             />
           </div>
         )}
@@ -160,21 +160,21 @@ export function RecipeDetail({
           <div className={styles.infoCard}>
             <div className={styles.infoCardContent}>
               <Clock className={styles.infoIcon} />
-              <div className={styles.infoLabel}>Prep Time</div>
+              <div className={styles.infoLabel}>准备时间</div>
               <div className={styles.infoValue}>{recipe.prepTime}</div>
             </div>
           </div>
           <div className={styles.infoCard}>
             <div className={styles.infoCardContent}>
               <ChefHat className={styles.infoIcon} />
-              <div className={styles.infoLabel}>Cook Time</div>
+              <div className={styles.infoLabel}>烹饪时间</div>
               <div className={styles.infoValue}>{recipe.cookTime}</div>
             </div>
           </div>
           <div className={styles.infoCard}>
             <div className={styles.infoCardContent}>
               <Users className={styles.infoIcon} />
-              <div className={styles.infoLabel}>Servings</div>
+              <div className={styles.infoLabel}>份量</div>
               <div className={styles.infoValue}>{recipe.servings}</div>
             </div>
           </div>
@@ -185,7 +185,7 @@ export function RecipeDetail({
           {/* Ingredients */}
           <div className={styles.contentCard}>
             <div className={styles.cardHeader}>
-              <h3 className={styles.sectionTitle}>Ingredients</h3>
+              <h3 className={styles.sectionTitle}>所需材料</h3>
               <div className={styles.sectionLine}></div>
             </div>
             <div className={styles.cardContent}>{renderIngredients()}</div>
@@ -194,11 +194,14 @@ export function RecipeDetail({
           {/* Instructions */}
           <div className={styles.contentCard}>
             <div className={styles.cardHeader}>
-              <h3 className={styles.sectionTitle}>Instructions</h3>
+              <h3 className={styles.sectionTitle}>制作步骤</h3>
               <div className={styles.sectionLine}></div>
             </div>
             <div className={styles.cardContent}>{renderInstructions()}</div>
           </div>
+        </div>
+        <div className={styles.menuAction}>
+          <Button disabled>＋ 加入今日菜单（即将开放）</Button>
         </div>
       </div>
     </div>

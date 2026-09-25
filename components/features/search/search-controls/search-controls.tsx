@@ -34,17 +34,17 @@ export function SearchControls({ initialQuery = "" }: SearchControlsProps) {
       <form onSubmit={handleSearchSubmit} className={styles.searchContainer}>
         <div className={styles.inputWrapper}>
           <Input
-            placeholder="Search recipes, ingredients, categories"
+            placeholder="搜搜今天想吃什么"
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
             className={styles.searchInput}
             type="search"
-            aria-label="Search recipes"
+            aria-label="搜索菜谱"
           />
           <Button
             type="submit"
             className={styles.searchButton}
-            aria-label="Search recipes"
+            aria-label="搜索菜谱"
             icon={<Search className={styles.buttonIcon} aria-hidden="true" />}
           />
         </div>

@@ -14,10 +14,7 @@ export function SearchResultsClient() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const rawQuery = searchParams.get("q") || "";
-  const query =
-    rawQuery.length > 0
-      ? rawQuery.charAt(0).toUpperCase() + rawQuery.slice(1)
-      : "";
+  const query = rawQuery;
 
   const {
     data: recipes = [],
@@ -49,11 +46,11 @@ export function SearchResultsClient() {
 
     return (
       <div className={styles.noResults}>
-        <h2>No recipes found</h2>
+        <h2>没有找到相关菜谱</h2>
         <p>
           {query
-            ? `No recipes found for "${query}". Try searching for different keywords.`
-            : "Enter a search term to find recipes."}
+            ? `没有找到“${query}”，换个关键词试试看。`
+            : "输入菜名、材料或分类开始搜索。"}
         </p>
       </div>
     );
@@ -78,8 +75,8 @@ export function SearchResultsClient() {
     if (error) {
       return (
         <div className={styles.noResults}>
-          <h2>Search Error</h2>
-          <p>{error.message || "Something went wrong with your search"}</p>
+          <h2>搜索遇到问题</h2>
+          <p>{error.message || "请稍后再试"}</p>
         </div>
       );
     }
@@ -92,7 +89,7 @@ export function SearchResultsClient() {
       <div className={styles.container}>
         <div className={styles.content}>
           <div className={styles.searchHeader}>
-            <h1 className="section-header">Search Results for {query}</h1>
+            <h1 className="section-header">“{query}”的搜索结果</h1>
           </div>
 
           <SearchControls initialQuery={query} />

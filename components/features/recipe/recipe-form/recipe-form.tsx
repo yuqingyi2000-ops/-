@@ -20,7 +20,6 @@ import {
   X,
   Upload,
   ImageIcon,
-  Sparkles,
   ArrowLeft,
   FolderPlus,
   //Globe,
@@ -28,20 +27,16 @@ import {
 // TODO: Import MultiImageAnalysisResponse when we add URL extraction
 import type {
   Recipe,
-  AIRecipeAnalysisResult,
   IngredientGroup,
   InstructionGroup,
 } from "@/types/recipe";
-import { AIRecipeAnalyzer } from "@/components/features/ai-recipe-analyzer/ai-recipe-analyzer";
 // import { URLRecipeExtractor } from "@/components/url-recipe-extractor/url-recipe-extractor";
-import { useAuth } from "@/lib/auth-context";
 import styles from "./recipe-form.module.css";
 import Image from "next/image";
 import {
   Button,
   Input,
   Select,
-  Switch,
   Textarea,
   Toast,
 } from "@khamudom/lumen-ui-react";
@@ -52,14 +47,15 @@ import {
 } from "@/lib/image-upload";
 
 const CATEGORY_OPTIONS = [
-  { value: "Appetizer", label: "Appetizer" },
-  { value: "Breakfast", label: "Breakfast" },
-  { value: "Lunch", label: "Lunch" },
-  { value: "Dinner", label: "Dinner" },
-  { value: "Side Dish", label: "Side Dish" },
-  { value: "Dessert", label: "Dessert" },
-  { value: "Snack", label: "Snack" },
-  { value: "Beverage", label: "Beverage" },
+  { value: "荤菜", label: "荤菜" },
+  { value: "素菜", label: "素菜" },
+  { value: "汤", label: "汤" },
+  { value: "主食", label: "主食" },
+  { value: "早餐", label: "早餐" },
+  { value: "快手菜", label: "快手菜" },
+  { value: "甜品", label: "甜品" },
+  { value: "饮品", label: "饮品" },
+  { value: "其他", label: "其他" },
 ];
 
 interface RecipeFormProps {
@@ -77,9 +73,6 @@ export function RecipeForm({
   onCancel,
   isSubmitting = false,
 }: RecipeFormProps) {
-  const { user } = useAuth();
-  const isAdmin = user?.id === process.env.NEXT_PUBLIC_ADMIN_USER_ID;
-
   // Initialize ingredient groups from existing recipe or create default structure
   const initializeIngredientGroups = (): IngredientGroup[] => {
     if (recipe?.ingredientGroups && recipe.ingredientGroups.length > 0) {
@@ -90,7 +83,7 @@ export function RecipeForm({
     if (recipe?.ingredients && recipe.ingredients.length > 0) {
       return [
         {
-          name: "Ingredients",
+          name: "材料",
           ingredients: recipe.ingredients.filter((ing) => ing.trim()),
           sortOrder: 0,
         },
@@ -100,7 +93,7 @@ export function RecipeForm({
     // Default empty group
     return [
       {
-        name: "Ingredients",
+        name: "材料",
         ingredients: [""],
         sortOrder: 0,
       },
@@ -117,7 +110,7 @@ export function RecipeForm({
     if (recipe?.instructions && recipe.instructions.length > 0) {
       return [
         {
-          name: "Instructions",
+          name: "做法",
           instructions: recipe.instructions.filter((inst) => inst.trim()),
           sortOrder: 0,
         },
@@ -127,7 +120,7 @@ export function RecipeForm({
     // Default empty group
     return [
       {
-        name: "Instructions",
+        name: "做法",
         instructions: [""],
         sortOrder: 0,
       },
@@ -151,7 +144,6 @@ export function RecipeForm({
     featuredOrder: recipe?.featuredOrder || undefined,
   });
 
-  const [showAIAnalyzer, setShowAIAnalyzer] = useState(false);
   // const [showURLExtractor, setShowURLExtractor] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -203,13 +195,13 @@ export function RecipeForm({
 
     // Validate file type
     if (!file.type.startsWith("image/")) {
-      setFormToast("Please select a valid image file");
+      setFormToast("请选择图片文件");
       return;
     }
 
     // Validate file size (20MB limit)
     if (file.size > 20 * 1024 * 1024) {
-      setFormToast("Image file size must be less than 20MB");
+      setFormToast("图片大小不能超过 20MB");
       return;
     }
 
@@ -235,7 +227,7 @@ export function RecipeForm({
       }));
     } catch (error) {
       console.error("Error uploading image:", error);
-      setFormToast("Failed to upload image. Please try again.");
+      setFormToast("图片上传失败，请再试一次");
     } finally {
       setIsUploadingImage(false);
     }
@@ -269,7 +261,7 @@ export function RecipeForm({
       ingredientGroups: [
         ...prev.ingredientGroups,
         {
-          name: `Group ${prev.ingredientGroups.length + 1}`,
+          name: `材料组 ${prev.ingredientGroups.length + 1}`,
           ingredients: [""],
           sortOrder: prev.ingredientGroups.length,
         },
@@ -352,7 +344,7 @@ export function RecipeForm({
       instructionGroups: [
         ...prev.instructionGroups,
         {
-          name: `Group ${prev.instructionGroups.length + 1}`,
+          name: `步骤组 ${prev.instructionGroups.length + 1}`,
           instructions: [""],
           sortOrder: prev.instructionGroups.length,
         },
@@ -428,107 +420,6 @@ export function RecipeForm({
     }));
   };
 
-  const handleAIAnalysisComplete = (recipeData: AIRecipeAnalysisResult) => {
-    // Handle both old ingredients array and new ingredient groups
-    let ingredientGroups: IngredientGroup[] = [];
-
-    if (recipeData.ingredientGroups && recipeData.ingredientGroups.length > 0) {
-      ingredientGroups = recipeData.ingredientGroups;
-    } else if (recipeData.ingredients && recipeData.ingredients.length > 0) {
-      // Convert old ingredients array to a default group
-      const dedupedIngredients = deduplicateIngredients(recipeData.ingredients);
-      ingredientGroups = [
-        {
-          name: "Ingredients",
-          ingredients: dedupedIngredients,
-          sortOrder: 0,
-        },
-      ];
-    } else {
-      ingredientGroups = [
-        {
-          name: "Ingredients",
-          ingredients: [""],
-          sortOrder: 0,
-        },
-      ];
-    }
-
-    // Handle both old instructions array and new instruction groups
-    let instructionGroups: InstructionGroup[] = [];
-
-    if (
-      recipeData.instructionGroups &&
-      recipeData.instructionGroups.length > 0
-    ) {
-      instructionGroups = recipeData.instructionGroups;
-    } else if (recipeData.instructions && recipeData.instructions.length > 0) {
-      // Convert old instructions array to a default group
-      instructionGroups = [
-        {
-          name: "Instructions",
-          instructions: recipeData.instructions.filter((inst) => inst.trim()),
-          sortOrder: 0,
-        },
-      ];
-    } else {
-      instructionGroups = [
-        {
-          name: "Instructions",
-          instructions: [""],
-          sortOrder: 0,
-        },
-      ];
-    }
-
-    setFormData({
-      title: recipeData.title || "",
-      description: recipeData.description || "",
-      ingredients: recipeData.ingredients || [""],
-      ingredientGroups,
-      instructions: recipeData.instructions || [""],
-      instructionGroups,
-      prepTime: recipeData.prepTime || "",
-      cookTime: recipeData.cookTime || "",
-      servings: recipeData.servings || "",
-      category: recipeData.category || "",
-      image: recipeData.image || formData.image,
-      imagePath: recipeData.imagePath || formData.imagePath, // Use AI result or preserve existing
-      featured: formData.featured, // Preserve the featured setting
-      featuredOrder: formData.featuredOrder, // Preserve the featured order
-    });
-    setShowAIAnalyzer(false);
-  };
-
-  const deduplicateIngredients = (ingredients: string[]): string[] => {
-    // Deduplicate ingredients (case-insensitive, preserves first occurrence's original casing)
-    const seen = new Map<string, string>();
-    ingredients.forEach((ing) => {
-      const key = ing.trim().toLowerCase();
-      if (key && !seen.has(key)) {
-        seen.set(key, ing.trim());
-      }
-    });
-    let dedupedIngredients = Array.from(seen.values());
-
-    // Remove ingredients that are substrings of other ingredients (case-insensitive, with a small length buffer)
-    dedupedIngredients = dedupedIngredients.filter((ing, idx, arr) => {
-      const ingLower = ing.toLowerCase();
-      return !arr.some(
-        (other, otherIdx) =>
-          otherIdx !== idx &&
-          other.toLowerCase().includes(ingLower) &&
-          other.length > ing.length + 3 // allow for "olive oil" vs "4 tablespoons olive oil"
-      );
-    });
-
-    return dedupedIngredients;
-  };
-
-  const handleAIAnalyzerCancel = () => {
-    setShowAIAnalyzer(false);
-  };
-
   // const handleURLExtractionComplete = (recipeData: AIRecipeAnalysisResult) => {
   //   setFormData({
   //     title: recipeData.title || "",
@@ -548,16 +439,6 @@ export function RecipeForm({
   // const handleURLExtractorCancel = () => {
   //   setShowURLExtractor(false);
   // };
-
-  // Show AI analyzer if enabled
-  if (showAIAnalyzer) {
-    return (
-      <AIRecipeAnalyzer
-        onAnalysisComplete={handleAIAnalysisComplete}
-        onCancel={handleAIAnalyzerCancel}
-      />
-    );
-  }
 
   // Show URL extractor if enabled
   // if (showURLExtractor) {
@@ -579,7 +460,7 @@ export function RecipeForm({
         {formToast && (
           <Toast
             variant="danger"
-            title="Upload error"
+            title="上传失败"
             description={formToast}
             onClose={() => setFormToast(null)}
           />
@@ -591,75 +472,19 @@ export function RecipeForm({
             onClick={onCancel}
             variant="ghost"
             icon={<ArrowLeft />}
-            aria-label="Back"
+            aria-label="返回"
           />
           <h1 className={`${styles.title} section-header`}>
-            {recipe ? "Edit Recipe" : "Add New Recipe"}
+            {recipe ? "编辑菜谱" : "添加菜谱"}
           </h1>
           <div className={styles.spacer}></div>
         </div>
 
         <form onSubmit={handleSubmit} className={styles.form}>
-          {/* AI Analysis Option - Only show for new recipes */}
-          {!recipe && (
-            <div className={`${styles.card} ${styles.aiCard}`}>
-              <div className={styles.cardHeader}>
-                <h3 className={styles.cardTitle}>AI Recipe Analysis</h3>
-                <CardLine />
-              </div>
-              <div className={styles.cardContent}>
-                <div className={styles.aiSection}>
-                  <div className={styles.aiDescription}>
-                    <Sparkles className={styles.aiIcon} />
-                    <div>
-                      <h4>Try AI Recipe Analysis</h4>
-                      <p>
-                        Upload a photo of your recipe and let our AI extract all
-                        the details automatically. Perfect for handwritten
-                        recipes, cookbook pages, or recipe cards!
-                      </p>
-                    </div>
-                  </div>
-                  <Button
-                    type="button"
-                    onClick={() => setShowAIAnalyzer(true)}
-                    icon={<Sparkles className={styles.buttonIcon} />}
-                  >
-                    Analyze Recipe Image
-                  </Button>
-                </div>
-
-                {/* <div className={styles.aiDivider}></div>
-                
-                <div className={styles.aiSection}>
-                  <div className={styles.aiDescription}>
-                    <Globe className={styles.aiIcon} />
-                    <div>
-                      <h4>Extract Recipe from URL</h4>
-                      <p>
-                        Enter a recipe webpage URL and our AI will automatically
-                        extract all the details for you.
-                      </p>
-                    </div>
-                  </div>
-                  <button
-                    disabled={true}
-                    type="button"
-                    onClick={() => setShowURLExtractor(true)}
-                    className={styles.aiButton}
-                  >
-                    <Globe className={styles.buttonIcon} />
-                    Extract from URL
-                  </button>
-                </div> */}
-              </div>
-            </div>
-          )}
-
           {/* Recipe Image */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
-              <h3 className={styles.cardTitle}>Recipe Photo</h3>
+              <h3 className={styles.cardTitle}>菜品图片</h3>
               <CardLine />
             </div>
             <div className={styles.cardContent}>
@@ -669,7 +494,7 @@ export function RecipeForm({
                     <div className={styles.imagePreviewWrapper}>
                       <Image
                         src={formData.image || "/placeholder.svg"}
-                        alt="Recipe preview"
+                        alt="菜品图片预览"
                         fill
                         className={styles.imagePreview}
                         sizes="(max-width: 768px) 100vw, 400px"
@@ -686,7 +511,7 @@ export function RecipeForm({
                 ) : (
                   <div className={styles.uploadPlaceholder}>
                     <ImageIcon className={styles.uploadIcon} />
-                    <p className={styles.uploadText}>No image selected</p>
+                    <p className={styles.uploadText}>还没有选择图片</p>
                   </div>
                 )}
                 <div className={styles.uploadControls}>
@@ -709,10 +534,10 @@ export function RecipeForm({
                     }
                   >
                     {isUploadingImage
-                      ? "Uploading..."
+                      ? "正在上传…"
                       : formData.image
-                      ? "Change Image"
-                      : "Upload Image"}
+                      ? "更换图片"
+                      : "选择图片"}
                   </Button>
                 </div>
               </div>
@@ -722,14 +547,14 @@ export function RecipeForm({
           {/* Basic Info */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
-              <h3 className={styles.cardTitle}>Recipe Details</h3>
+              <h3 className={styles.cardTitle}>菜谱信息</h3>
               <CardLine />
             </div>
             <div className={styles.cardContent}>
               <div className={styles.inputGrid}>
                 <Input
                   id="title"
-                  label="Recipe Title *"
+                  label="菜名 *"
                   value={formData.title}
                   onChange={(e) =>
                     setFormData((prev) => ({
@@ -737,13 +562,13 @@ export function RecipeForm({
                       title: e.target.value,
                     }))
                   }
-                  placeholder="Enter recipe title..."
+                  placeholder="例如：番茄炒蛋"
                   className={styles.inputGroup}
                   required
                 />
                 <Select
                   id="category"
-                  label="Category *"
+                  label="分类 *"
                   value={formData.category}
                   onChange={(e) =>
                     setFormData((prev) => ({
@@ -751,7 +576,7 @@ export function RecipeForm({
                       category: e.target.value,
                     }))
                   }
-                  placeholder="Select category"
+                  placeholder="请选择分类"
                   options={CATEGORY_OPTIONS}
                   className={styles.inputGroup}
                   required
@@ -760,7 +585,7 @@ export function RecipeForm({
 
               <Textarea
                 id="description"
-                label="Description"
+                label="简单介绍"
                 value={formData.description}
                 onChange={(e) =>
                   setFormData((prev) => ({
@@ -768,55 +593,14 @@ export function RecipeForm({
                     description: e.target.value,
                   }))
                 }
-                placeholder="Describe your recipe..."
+                placeholder="写一句这道菜的小故事（选填）"
                 className={styles.inputGroup}
               />
-
-              {/* Admin-only featured recipe toggle */}
-              {isAdmin && (
-                <Switch
-                  id="featured"
-                  checked={formData.featured}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      featured: e.target.checked,
-                    }))
-                  }
-                  label={
-                    formData.featured ? "⭐ Featured" : "Mark as featured"
-                  }
-                  helperText="Featured recipes appear on the homepage"
-                  className={styles.inputGroup}
-                />
-              )}
-
-              {/* Admin-only featured order input */}
-              {isAdmin && formData.featured && (
-                <Input
-                  id="featuredOrder"
-                  type="number"
-                  min={1}
-                  label="Featured Order"
-                  value={formData.featuredOrder || ""}
-                  onChange={(e) =>
-                    setFormData((prev) => ({
-                      ...prev,
-                      featuredOrder: e.target.value
-                        ? parseInt(e.target.value)
-                        : undefined,
-                    }))
-                  }
-                  placeholder="e.g., 1 (first), 2 (second), etc."
-                  helperText="Lower numbers appear first. Leave empty for default order."
-                  className={styles.inputGroup}
-                />
-              )}
 
               <div className={styles.metaGrid}>
                 <Input
                   id="prepTime"
-                  label="Prep Time"
+                  label="准备时间（选填）"
                   value={formData.prepTime}
                   onChange={(e) =>
                     setFormData((prev) => ({
@@ -824,12 +608,12 @@ export function RecipeForm({
                       prepTime: e.target.value,
                     }))
                   }
-                  placeholder="e.g., 30 minutes"
+                  placeholder="例如：10分钟"
                   className={styles.inputGroup}
                 />
                 <Input
                   id="cookTime"
-                  label="Cook Time"
+                  label="烹饪时间（选填）"
                   value={formData.cookTime}
                   onChange={(e) =>
                     setFormData((prev) => ({
@@ -837,13 +621,13 @@ export function RecipeForm({
                       cookTime: e.target.value,
                     }))
                   }
-                  placeholder="e.g., 45 minutes"
+                  placeholder="例如：20分钟"
                   className={styles.inputGroup}
                 />
                 <Input
                   id="servings"
                   type="text"
-                  label="Servings"
+                  label="份量（选填）"
                   value={formData.servings}
                   onChange={(e) =>
                     setFormData((prev) => ({
@@ -851,7 +635,7 @@ export function RecipeForm({
                       servings: e.target.value,
                     }))
                   }
-                  placeholder="e.g., 4-6 people"
+                  placeholder="例如：2人份"
                   className={styles.inputGroup}
                 />
               </div>
@@ -861,7 +645,7 @@ export function RecipeForm({
           {/* Ingredients - Grouped with add/remove functionality */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
-              <h3 className={styles.cardTitle}>Ingredients</h3>
+              <h3 className={styles.cardTitle}>所需材料</h3>
               <CardLine />
             </div>
             <div className={styles.cardContent}>
@@ -873,7 +657,7 @@ export function RecipeForm({
                       onChange={(e) =>
                         updateIngredientGroupName(groupIndex, e.target.value)
                       }
-                      placeholder="Group name (e.g., 'Avocado Topping')"
+                      placeholder="材料分组名称"
                       className={styles.groupNameInput}
                     />
                     {formData.ingredientGroups.length > 1 && (
@@ -898,7 +682,7 @@ export function RecipeForm({
                             e.target.value
                           )
                         }
-                        placeholder={`Ingredient ${ingredientIndex + 1}...`}
+                        placeholder={`材料 ${ingredientIndex + 1}，例如：鸡蛋 2个`}
                         className={styles.input}
                       />
                       {group.ingredients.length > 1 && (
@@ -925,7 +709,7 @@ export function RecipeForm({
                     className={styles.addIngredientButton}
                     icon={<Plus className={styles.buttonIcon} />}
                   >
-                    Add Ingredient
+                    ＋ 添加材料
                   </Button>
                 </div>
               ))}
@@ -937,7 +721,7 @@ export function RecipeForm({
                 className={styles.addGroupButton}
                 icon={<FolderPlus className={styles.buttonIcon} />}
               >
-                Add Ingredient Group
+                添加材料分组
               </Button>
             </div>
           </div>
@@ -945,7 +729,7 @@ export function RecipeForm({
           {/* Instructions - Grouped with add/remove functionality */}
           <div className={styles.card}>
             <div className={styles.cardHeader}>
-              <h3 className={styles.cardTitle}>Instructions</h3>
+              <h3 className={styles.cardTitle}>制作步骤</h3>
               <CardLine />
             </div>
             <div className={styles.cardContent}>
@@ -957,7 +741,7 @@ export function RecipeForm({
                       onChange={(e) =>
                         updateInstructionGroupName(groupIndex, e.target.value)
                       }
-                      placeholder="Group name (e.g., 'Preheat & Prep')"
+                      placeholder="步骤分组名称"
                       className={styles.groupNameInput}
                     />
                     {formData.instructionGroups.length > 1 && (
@@ -985,7 +769,7 @@ export function RecipeForm({
                             e.target.value
                           )
                         }
-                        placeholder={`Step ${instructionIndex + 1}...`}
+                        placeholder={`第 ${instructionIndex + 1} 步…`}
                         className={styles.textarea}
                       />
                       {group.instructions.length > 1 && (
@@ -1012,7 +796,7 @@ export function RecipeForm({
                     className={styles.addIngredientButton}
                     icon={<Plus className={styles.buttonIcon} />}
                   >
-                    Add Step
+                    ＋ 添加步骤
                   </Button>
                 </div>
               ))}
@@ -1024,7 +808,7 @@ export function RecipeForm({
                 className={styles.addGroupButton}
                 icon={<FolderPlus className={styles.buttonIcon} />}
               >
-                Add Instruction Group
+                添加步骤分组
               </Button>
             </div>
           </div>
@@ -1037,16 +821,16 @@ export function RecipeForm({
               onClick={onCancel}
               disabled={isSubmitting}
             >
-              Cancel
+              取消
             </Button>
             <Button type="submit" loading={isSubmitting}>
               {isSubmitting
                 ? recipe
-                  ? "Updating..."
-                  : "Saving..."
+                  ? "正在保存…"
+                  : "正在保存…"
                 : recipe
-                ? "Update Recipe"
-                : "Save Recipe"}
+                ? "保存修改"
+                : "保存到饭饭簿"}
             </Button>
           </div>
         </form>

@@ -10,16 +10,16 @@ type AuthMode = "signin" | "signup" | "forgot-password";
 // Constants for better maintainability and performance
 const AUTH_CONTENT = {
   signup: {
-    title: "Join The Recipe Room",
-    subtitle: "Create an account to start sharing your favorite recipes",
+    title: "加入饭饭簿",
+    subtitle: "创建账号，开始收藏喜欢的味道",
   },
   "forgot-password": {
-    title: "Reset Your Password",
-    subtitle: "Enter your email to receive a password reset link",
+    title: "找回密码",
+    subtitle: "输入邮箱，我们会发送密码重置链接",
   },
   signin: {
-    title: "Welcome Back",
-    subtitle: "Sign in to create and access your recipes",
+    title: "欢迎回来",
+    subtitle: "登录后继续记录每一顿好好吃饭的日子",
   },
 } as const;
 

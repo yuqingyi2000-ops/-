@@ -409,3 +409,18 @@
     max-width: 95vw !important;
   }
 }
+.simplePage { max-width: 680px; min-height: 100vh; margin: 0 auto; padding: 2rem 1rem 7rem; }
+.simplePage header span { color: #829582; font-size: .68rem; letter-spacing: .18em; font-weight: 700; }
+.simplePage header h1 { margin: .4rem 0 1.5rem; color: #405445; font-size: 2rem; }
+.simpleCard { padding: 2rem 1rem; text-align: center; background: #fffdf7; border: 1px solid rgba(112,137,114,.14); border-radius: 28px; }
+.simpleAvatar { display: grid; width: 74px; height: 74px; margin: 0 auto; place-items: center; color: #607863; background: #e8efe5; border-radius: 26px; }
+.simpleAvatar svg { width: 34px; height: 34px; }
+.simpleCard h2 { margin: 1rem 0 .35rem; color: #405445; }
+.simpleCard p { margin: 0; color: #89938b; }
+.spaceCard { display: flex; gap: 1rem; align-items: center; margin-top: 1rem; padding: 1.2rem; background: #e9f0f1; border-radius: 22px; color: #53686b; }
+.spaceCard > svg { flex: 0 0 auto; }
+.spaceCard div { display: flex; flex-direction: column; gap: .18rem; }
+.spaceCard span, .spaceCard small { color: #7f8e90; }
+.spaceCard strong { color: #44595c; }
+.simpleButton { display: flex; width: 100%; min-height: 52px; margin-top: 1rem; align-items: center; justify-content: center; gap: .5rem; border: 0; border-radius: 18px; background: #748b76; color: white; font: inherit; font-weight: 700; text-decoration: none; cursor: pointer; }
+.simpleButton svg { width: 19px; }

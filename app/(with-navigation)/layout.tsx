@@ -1,4 +1,5 @@
 import { Navigation } from "@/components/layout/navigation/navigation";
+import { BottomNavigation } from "@/components/layout/bottom-navigation/bottom-navigation";
 
 export default function WithNavigationLayout({
   children,
@@ -9,6 +10,7 @@ export default function WithNavigationLayout({
     <>
       <Navigation />
       {children}
+      <BottomNavigation />
     </>
   );
 }

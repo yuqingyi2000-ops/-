@@ -49,7 +49,7 @@ export default function EditRecipePage() {
   if (isLoading) {
     return (
       <div className={styles.container}>
-        <div className={styles.loadingText}>Loading recipe...</div>
+        <div className={styles.loadingText}>正在加载菜谱…</div>
       </div>
     );
   }
@@ -59,13 +59,13 @@ export default function EditRecipePage() {
       <div className={styles.errorContainer}>
         <div className={styles.errorContent}>
           <p className={styles.errorMessage}>
-            {error?.message || "Recipe not found"}
+            {error?.message || "没有找到这道菜谱"}
           </p>
           <button
             onClick={() => router.push("/")}
             className={styles.backButton}
           >
-            Back to Recipes
+            返回菜谱
           </button>
         </div>
       </div>

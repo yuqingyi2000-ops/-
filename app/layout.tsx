@@ -13,7 +13,6 @@ import { ReactQueryProvider } from "@/components/providers/ReactQueryProvider";
 import { LumenProvider } from "@/components/providers/LumenProvider";
 import { PageTransition } from "@/components/ui/page-transition/page-transition";
 import { ServiceWorkerUpdateHandler } from "@/components/ui/service-worker-update-handler/service-worker-update-handler";
-import { LazyAIChefWidget } from "@/components/features/ai-chef/lazy-ai-chef-widget";
 import { OverlayScrollLock } from "@/components/providers/overlay-scroll-lock";
 
 const playfair = Playfair_Display({
@@ -45,8 +44,8 @@ const ebGaramond = EB_Garamond({
 });
 
 export const metadata: Metadata = {
-  title: "The Recipe Room",
-  description: "A vintage-style recipe collection app",
+  title: "饭饭簿",
+  description: "和喜欢的人一起收藏每一顿好好吃饭的日子",
   icons: {
     icon: "/favrecipebox.webp",
   },
@@ -60,13 +59,13 @@ export default function RootLayout({
 }) {
   return (
     <html
-      lang="en"
+      lang="zh-CN"
       className={`${playfair.variable} ${crimson.variable} ${cormorant.variable} ${ebGaramond.variable}`}
     >
       <head>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <meta name="theme-color" content="#7c021d" />
-        <title>The Recipe Room</title>
+        <meta name="theme-color" content="#748b76" />
+        <title>饭饭簿</title>
       </head>
       <body suppressHydrationWarning={true}>
         <ReactQueryProvider>
@@ -77,7 +76,6 @@ export default function RootLayout({
                 <main>{children}</main>
               </PageTransition>
               <OverlayScrollLock />
-              <LazyAIChefWidget />
               <ServiceWorkerUpdateHandler />
             </AuthProvider>
           </LumenProvider>
