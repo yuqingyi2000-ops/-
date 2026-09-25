@@ -33,26 +33,28 @@ export const CATEGORIES = [
 // Category icon mapping for Lucide icons
 // Each category has a corresponding icon for visual representation in the UI
 export const CATEGORY_ICONS = {
-  Appetizer: "HandPlatter",
-  Breakfast: "Sun",
-  Lunch: "Sandwich",
-  Dinner: "CookingPot",
-  "Side Dish": "Salad",
-  Dessert: "CakeSlice",
-  Snack: "Cookie",
-  Beverage: "Wine",
+  "荤菜": "HandPlatter",
+  "素菜": "Salad",
+  "汤": "CookingPot",
+  "主食": "Sandwich",
+  "早餐": "Sun",
+  "快手菜": "Cookie",
+  "甜品": "CakeSlice",
+  "饮品": "Wine",
+  "其他": "HandPlatter",
 } as const;
 
 // Category slug mapping for SEO-friendly URLs
 export const CATEGORY_SLUGS = {
-  Appetizer: "appetizer",
-  Breakfast: "breakfast",
-  Lunch: "lunch",
-  Dinner: "dinner",
-  "Side Dish": "side-dish",
-  Dessert: "dessert",
-  Snack: "snack",
-  Beverage: "beverage",
+  "荤菜": "meat",
+  "素菜": "vegetable",
+  "汤": "soup",
+  "主食": "staple",
+  "早餐": "breakfast",
+  "快手菜": "quick",
+  "甜品": "dessert",
+  "饮品": "drink",
+  "其他": "other",
 } as const;
 
 // Reverse mapping from slug to category name
