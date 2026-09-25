@@ -65,7 +65,9 @@ export async function POST(request: NextRequest) {
     const fileName = `${Date.now()}-${Math.random()
       .toString(36)
       .substring(2)}.${fileExt}`;
-    const filePath = `${fileName}`;
+    // Keep every user's files in their own folder so Storage RLS can enforce
+    // ownership for uploads and deletions.
+    const filePath = `${user.id}/${fileName}`;
 
     // Upload the file to Supabase Storage
     const { error } = await supabase.storage
